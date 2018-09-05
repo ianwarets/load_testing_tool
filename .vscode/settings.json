@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "array": "c",
+        "deque": "c",
+        "vector": "c",
+        "cstring": "c",
+        "functional": "c",
+        "istream": "c",
+        "tuple": "c",
+        "utility": "c",
+        "initializer_list": "cpp"
+    }
+}
