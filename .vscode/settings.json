@@ -8,6 +8,13 @@
         "istream": "c",
         "tuple": "c",
         "utility": "c",
-        "initializer_list": "cpp"
+        "initializer_list": "cpp",
+        "*.tcc": "c",
+        "time.h": "c",
+        "system_error": "c",
+        "type_traits": "c",
+        "transactions.h": "c",
+        "typeinfo": "c",
+        "http_requests.h": "c"
     }
 }
