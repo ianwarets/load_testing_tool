@@ -47,8 +47,20 @@ int logger_init(zlog_categories * log_categories){
 }
 
 int create_test_configuration_sturcture(char * test_file_data, runner_data * test_runner_data){
-
+	test_runner_data->start_delay = 0;
+	test_runner_data->steps_count = 2;
+	test_runner_data->steps = (step_data*)malloc(sizeof(step_data) * test_runner_data-> steps_count);
+	//test_runner_data->steps[0]
+	return 0;
 }
+
+step_data * generate_steps_data(int count){
+	step_data * sd = (step_data*)malloc(sizeof(step_data) * count);
+	//sd[0].next_step = sd[1];
+	//sd->
+	return NULL;
+}
+
 int main(int argc, char ** argv){
 	
 	int rc = zlog_init("zlog.conf");
@@ -56,9 +68,9 @@ int main(int argc, char ** argv){
 		fprintf(stderr, "init failed\n");
 		return -1;
 	}
-	
-	zlog_programm_category = zlog_get_category("programm_log");
-	zlog_statistics = zlog_get_category("statistics");
+	zlog_init("zlog.conf");
+	zlog_category_t * zlog_programm_category = zlog_get_category("programm_log");
+	zlog_category_t * zlog_statistics = zlog_get_category("statistics");
 	if(!zlog_programm_category || !zlog_statistics){
 		if(!zlog_statistics){
 		fprintf(stderr, "get \"statistics\" zlog category failed/");

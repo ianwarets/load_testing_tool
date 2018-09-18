@@ -8,7 +8,7 @@ DWORD WINAPI run_step_threads(LPVOID parameter){
     step_data current_step = *((step_data*)parameter);
     if(current_step.to_start){
         for(long i = 0; i < current_step.threads_count; i++){
-            current_step.threads_array[i].thread = CreateThread(NULL, 0, current_step.action, current_step.param, 0, NULL);
+            current_step.threads_array[i].thread = CreateThread(NULL, 0, current_step.threads_array[i].run_action_function, current_step.param, 0, NULL);
             Sleep(current_step.slope_delay);
         }
     }
@@ -24,20 +24,19 @@ DWORD WINAPI run_step_threads(LPVOID parameter){
  * Функция выполняет запуск\останов потоков каждой ступени теста.
  * Функция вызывается по истечении времени таймера
  */
-VOID CALLBACK step_routine(LPVOID parameter, DWORD lowTimer, DWORD highTimer){
-    HANDLE step_thread = CreateThread(NULL, 0, run_step_threads, parameter, 0, NULL);
+VOID CALLBACK step_routine(LPVOID p_step_data, DWORD lowTimer, DWORD highTimer){
+    HANDLE step_thread = CreateThread(NULL, 0, run_step_threads, p_step_data, 0, NULL);
     if(!step_thread){
         //log error        
     }
-    step_data current_step = *((step_data*)parameter);
-    parameter = current_step.next_step;
+    step_data current_step = *((step_data*)p_step_data);    
 }
 
 /**
  *  Запуск ступеней теста по таймеру. 
  */
-DWORD WINAPI test_controller(LPVOID parameter){
-    runner_data r_data = *((runner_data*)parameter);
+DWORD WINAPI test_controller(LPVOID p_runner_data){
+    runner_data r_data = *((runner_data*)p_runner_data);
 
     struct _SECURITY_ATTRIBUTES security_attr;
     security_attr.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -49,7 +48,9 @@ DWORD WINAPI test_controller(LPVOID parameter){
     start_time.QuadPart = 0;
     long duration = r_data.start_delay;
     step_data * next_step = r_data.steps;    
-    while(next_step != NULL){
+    long step_index = 0;
+    while(step_index < r_data.steps_count){
+        next_step = &(r_data.steps[step_index++]); 
         HANDLE step_timer = CreateWaitableTimer(&security_attr, TRUE, "Local Steps timer.");
         if(step_timer == NULL){
             //log error
@@ -66,9 +67,8 @@ DWORD WINAPI test_controller(LPVOID parameter){
             //log error
             ExitThread(ERR_CANCEL_TIMER);
         }
-        if(next_step != NULL){
-            duration = next_step->next_step_time_interval;
-        }
+
+        duration = next_step->next_step_time_interval;        
     }
     return 0;
 }
