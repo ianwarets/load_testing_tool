@@ -6,8 +6,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "C:/Programming/C/libraries/**"            
+                "${workspaceFolder}\\**",
+                "C:\\Programming\\C\\libraries\\**"            
             ],
             "defines": [
                 "_DEBUG",

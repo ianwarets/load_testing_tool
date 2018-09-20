@@ -15,6 +15,7 @@
         "type_traits": "c",
         "transactions.h": "c",
         "typeinfo": "c",
-        "http_requests.h": "c"
+        "http_requests.h": "c",
+        "unordered_map": "c"
     }
 }

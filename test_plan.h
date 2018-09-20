@@ -1,18 +1,27 @@
+#include "test_controller.h"
+
 typedef struct {
-    char * action_file_name;
+    wchar_t * action_file_name;
     long pacing;
     long percentage;
 } action;
 
 typedef struct {
-    char * action_type;
+    wchar_t * action_type;
     long run_duration;
-    long thread_count;
+    long threads_count;
     long slope_duration;
 } test_step;
 
 typedef struct {
-    char * name;
+    wchar_t * name;
     test_step * steps;
+    int steps_count;
     action * actions;
-} tesp_plan;
+    int actions_count;
+} test_plan;
+
+
+void free_runner_data(runner_data *, void(*)());
+runner_data * generate_runner_data(char *);
+char * read_test_plan(char *);

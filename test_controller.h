@@ -29,7 +29,6 @@ struct step_data{
     void * param;
     BOOL to_start; //run or stop threads
     long slope_delay; // used for slope providing
-    step_data * next_step;
 };
 
 typedef struct {
