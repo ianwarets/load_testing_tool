@@ -1,8 +1,10 @@
 #include "test_controller.h"
+#include <wchar.h>
 
 typedef struct {
-    wchar_t * action_file_name;
+    wchar_t * action_file_name;    
     long pacing;
+    char * pacing_type;
     long percentage;
 } action;
 
@@ -15,6 +17,7 @@ typedef struct {
 
 typedef struct {
     wchar_t * name;
+    int start_delay;
     test_step * steps;
     int steps_count;
     action * actions;
@@ -22,6 +25,6 @@ typedef struct {
 } test_plan;
 
 
-void free_runner_data(runner_data *, void(*)());
+void free_runner_data(runner_data *);
 runner_data * generate_runner_data(char *);
 char * read_test_plan(char *);
