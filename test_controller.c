@@ -47,7 +47,7 @@ DWORD WINAPI test_controller(LPVOID p_runner_data){
     security_attr.bInheritHandle = FALSE;
     security_attr.lpSecurityDescriptor = NULL;
     
-    LARGE_INTEGER start_time{.QuadPart = 0};
+    LARGE_INTEGER start_time = {.QuadPart = 0};
     long duration = r_data.start_delay;
     zlog_debug(loggers->common, "Start delay : %li", duration);
     step_data * step;    
