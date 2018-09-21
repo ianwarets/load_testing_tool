@@ -1,4 +1,3 @@
-#include <zlog.h>
 
 typedef struct {
     zlog_category_t * scenario;

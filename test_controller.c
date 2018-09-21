@@ -1,6 +1,6 @@
 #include "test_controller.h"
 
-zlog_categories * loggers;
+extern zlog_categories * loggers;
 /**
  * Функция запуска/останова потоков ступени. 
  * Запускается в потоке, чтоб не задерживать отсчет времени для следующих ступеней.
@@ -13,16 +13,26 @@ static DWORD WINAPI run_step_threads(LPVOID parameter){
             current_step.threads_count,
             current_step.slope_delay);
     long slope_interval = current_step.slope_delay / current_step.threads_count;
-    if(current_step.to_start){        
+    if(current_step.to_start){     
+        zlog_info(loggers->common, "Creating threads for step");   
         for(long i = 0; i < current_step.threads_count; i++){
+            zlog_debug(loggers->common, "Creating step thread № %i", i);
             current_step.threads_array[i].thread = CreateThread(NULL, 0, current_step.threads_array[i].run_action_function, current_step.param, 0, NULL);
-            Sleep(current_step.slope_delay);
+            if(current_step.threads_array[i].thread == NULL){
+                zlog_error(loggers->common, "Failed to create thread for step. Thread № %i", i);
+                continue;
+            }
+            zlog_debug(loggers->common, "Thread № %i for step created. Sleep for %li", i, slope_interval);
+            Sleep(slope_interval);
         }
     }
     else{
+        zlog_info(loggers->common, "Stopping threads for step");
         for(long i = 0; i < current_step.threads_count; i++){
+            zlog_debug(loggers->common, "Signaling thread № %i to stop", i);
             current_step.threads_array[i].stop_flag = 1;
-            Sleep(current_step.slope_delay);                       
+            zlog_debug(loggers->common, "Sleep for %li", slope_interval);
+            Sleep(slope_interval);                       
         }
     }
     return 0;
@@ -41,7 +51,6 @@ static VOID CALLBACK step_routine(LPVOID p_step_data, DWORD lowTimer, DWORD high
 
 DWORD WINAPI test_controller(LPVOID p_runner_data){
     runner_data r_data = *((runner_data*)p_runner_data);
-    loggers = r_data.loggers;
     struct _SECURITY_ATTRIBUTES security_attr;
     security_attr.nLength = sizeof(SECURITY_ATTRIBUTES);
     security_attr.bInheritHandle = FALSE;

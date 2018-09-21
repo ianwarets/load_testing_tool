@@ -1,7 +1,14 @@
 #include "logger.h"
+#include <zlog.h>
+
+zlog_categories * loggers = NULL;
 
 // Выполнить однократнуню инициализацию.
-int logger_init(zlog_categories * log_categories){
+int logger_init(){
+	if(loggers != NULL){
+		return 0;
+	}
+	loggers = (typeof(loggers))malloc(sizeof(typeof(*loggers)));
 	zlog_category_t * zlog_scenario;
 	zlog_category_t * zlog_statistics;
 	zlog_category_t * zlog_common;
@@ -29,8 +36,14 @@ int logger_init(zlog_categories * log_categories){
 		return 1;
 	}
 
-	log_categories->common = zlog_common;
-	log_categories->scenario = zlog_scenario;
-	log_categories->statistics = zlog_statistics;
+	loggers->common = zlog_common;
+	loggers->scenario = zlog_scenario;
+	loggers->statistics = zlog_statistics;
+	return 0;
+}
+
+int logger_close(){
+	free(loggers);
+	zlog_fini();
 	return 0;
 }

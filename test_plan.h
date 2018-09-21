@@ -9,7 +9,7 @@ typedef struct {
 } action;
 
 typedef struct {
-    wchar_t * action_type;
+    wchar_t * step_type;
     long run_duration;
     long threads_count;
     long slope_duration;
@@ -25,6 +25,6 @@ typedef struct {
 } test_plan;
 
 
-void free_runner_data(runner_data *);
-runner_data * generate_runner_data(char *);
 char * read_test_plan(char *);
+runner_data * generate_runner_data(char *);
+void free_runner_data(runner_data *);

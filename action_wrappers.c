@@ -1,3 +1,4 @@
+#include <windows.h>
 #include "action_wrappers.h"
 #include "test_controller.h"
 
