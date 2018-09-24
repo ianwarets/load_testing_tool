@@ -1,4 +1,3 @@
-#include <windows.h>
 #include "action_wrappers.h"
 #include "test_controller.h"
 
@@ -13,10 +12,13 @@ static void no_pacing_runner(void(*action)(), void * parameter, DWORD pace_time)
     Выполняет действие с интервалом, относительно начала выполнения действия.
 */
 static void fixed_pacing_runner(void(*action)(), void * parameter, DWORD pace_time){
-    ULONGLONG start = GetTickCount64();
+    //ULONGLONG start = GetTickCount64();
+    DWORD start = GetTickCount();
     action(parameter);
-    ULONGLONG finish = GetTickCount64();
-    ULONGLONG diff = finish - start;
+    DWORD finish = GetTickCount();
+    //ULONGLONG finish = GetTickCount64();
+    //ULONGLONG diff = finish - start;
+    DWORD diff = finish - start;
     DWORD sleep_time = pace_time - diff;
     if(sleep_time){
         SleepEx(pace_time, TRUE);
@@ -33,7 +35,7 @@ static void relative_pacing_runner(void(*action)(), void * parameter, DWORD dela
 /*
     Thread routine function
 */
-static void actions_wrapper(LPVOID thread_params, void(*pacing_function)()){
+static DWORD actions_wrapper(LPVOID thread_params, void(*pacing_function)()){
     thread_data * t_data = (thread_data*)thread_params;
     void (*init_routine)() = t_data->action->init;
     void (*action)() = t_data->action->action;
@@ -45,14 +47,15 @@ static void actions_wrapper(LPVOID thread_params, void(*pacing_function)()){
     }
     while(!t_data->stop_flag);    
     end_routine(t_data->action);
+    return 0;
 }
 
 DWORD WINAPI no_pacing(LPVOID thread_params){
-    actions_wrapper(thread_params, no_pacing_runner);
+    return actions_wrapper(thread_params, no_pacing_runner);
 }
 DWORD WINAPI fixed_pacing(LPVOID thread_params){
-    action_wrapper(thread_params, fixed_pacing_runner);
+    return actions_wrapper(thread_params, fixed_pacing_runner);
 }
 DWORD WINAPI relative_pacing(LPVOID thread_params){
-    actions_wrapper(thread_params, relative_pacing_runner);
+    return actions_wrapper(thread_params, relative_pacing_runner);
 }

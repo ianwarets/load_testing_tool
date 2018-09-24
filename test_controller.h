@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <zlog.h>
 #include "logger.h"
 
 //#pragma once

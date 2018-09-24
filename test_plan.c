@@ -6,8 +6,8 @@
 extern zlog_categories * loggers;
 
 static int create_test_plan_from_json(char *, test_plan *);
-static LPTHREAD_START_ROUTINE define_pacing_function(wchar_t *);
-static int get_function_references(action_data *, wchar_t *);
+static LPTHREAD_START_ROUTINE define_pacing_function(const wchar_t *);
+static int get_function_references(action_data *, const wchar_t *);
 
 static char * read_test_plan(char * test_plan_name){
     zlog_info(loggers->common, "Opening test plan data file");
@@ -67,7 +67,7 @@ runner_data * generate_runner_data(char * test_plan_name){
         //TODO: add stop step or run until completion - one iteration
     }
     r_data->start_delay = t_plan.start_delay;
-    r_data->steps = (test_step*)malloc(sizeof(test_step) * t_plan.steps_count);
+    r_data->steps = (step_data*)malloc(sizeof(step_data) * t_plan.steps_count);
     if(r_data->steps == NULL){
         zlog_error(loggers->common, "Failed to allocate memory for runner_data.steps");
         free_runner_data(r_data);
@@ -87,7 +87,7 @@ runner_data * generate_runner_data(char * test_plan_name){
         return NULL;
     }
     for(int i = 0; i < actions_count; i++){
-        if(get_function_references($(actions[i]), t_plan.actions[i].action_file_name)){
+        if(get_function_references(&(actions[i]), t_plan.actions[i].action_file_name)){
             free_runner_data(r_data);
             return NULL;
         }
@@ -232,7 +232,7 @@ static int create_test_plan_from_json(char * json_string, test_plan * plan){
     UJObject o_step, o_step_type, o_step_run_duration, o_step_threads_count, o_step_slope_duration;
     objects_count = 4;
     i = 0;
-    const wchar_t step_keys = { L"name", L"action_type", L"run_duration", L"threads_count", L"slope_duration"};
+    const wchar_t * step_keys[] = { L"name", L"action_type", L"run_duration", L"threads_count", L"slope_duration"};
     zlog_info(loggers->common, "Starting cycle of getting steps data to structure");
     while(UJIterArray(iterator, o_step)){
         t_plan.steps_count = i;
@@ -250,7 +250,7 @@ static int create_test_plan_from_json(char * json_string, test_plan * plan){
         }
         size_t str_size = 0;
         zlog_info(loggers->common, "Calling UJReadString for step type name.");
-        wchar_t * act_type = UJReadString(o_step_type, &str_size);
+        const wchar_t * act_type = UJReadString(o_step_type, &str_size);
         t_plan.steps[i].step_type = (wchar_t *)malloc(sizeof(wchar_t) * (str_size + 1));
         if(t_plan.steps[i].step_type == NULL){            
             zlog_error(loggers->common, "Step_type malloc failed");
@@ -272,24 +272,30 @@ static int create_test_plan_from_json(char * json_string, test_plan * plan){
     return 0;
 }
 
-static int get_function_references(action_data * p_action, wchar_t * file_name){
-    LPCSTR f_name = "convert wchar_t to char";
-    p_action->library_handler = LoadLibrary(file_name);
+static int get_function_references(action_data * p_action, const wchar_t * file_name){
+    int fname_len = wcslen(file_name);
+    char * f_name = (char*)malloc(sizeof(char) * (fname_len + 1));
+    for(int i = 0; i < fname_len; i++){
+        f_name[i] = wctob(file_name[i]);
+    }
+    f_name[fname_len] = '\0';
+
+    p_action->library_handler = LoadLibrary(f_name);
     if(p_action->library_handler == NULL){        
         zlog_error(loggers->common, "Failed to load file %s. [%s]", f_name, GetLastError());
         return 1;
     }
-    p_action->action = GetProcAddress(p_action->library_handler, "action");
+    p_action->action = (void*)GetProcAddress(p_action->library_handler, "action");
     if(p_action->action == NULL){        
         zlog_error(loggers->common, "Failde to get \"action\" method from file: %s", f_name);
         FreeLibrary(p_action->library_handler);
         return 1;
     }
-    p_action->init = GetProcAddress(p_action->library_handler, "init");
-    p_action->end = GetProcAddress(p_action->library_handler, "end");
+    p_action->init = (void*)GetProcAddress(p_action->library_handler, "init");
+    p_action->end = (void*)GetProcAddress(p_action->library_handler, "end");
 }
 
-static LPTHREAD_START_ROUTINE define_pacing_function(wchar_t * pacing_type){
+static LPTHREAD_START_ROUTINE define_pacing_function(const wchar_t * pacing_type){
     if(wcscmp(pacing_type, L"no")){
         return no_pacing;
     }

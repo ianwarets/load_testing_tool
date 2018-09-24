@@ -1,5 +1,5 @@
 #include "logger.h"
-#include <zlog.h>
+#include <stdlib.h>
 
 zlog_categories * loggers = NULL;
 

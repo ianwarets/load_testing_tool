@@ -45,7 +45,7 @@ static VOID CALLBACK step_routine(LPVOID p_step_data, DWORD lowTimer, DWORD high
     zlog_info(loggers->common, "Running step routine thread.");
     HANDLE step_thread = CreateThread(NULL, 0, run_step_threads, p_step_data, 0, NULL);
     if(!step_thread){
-        zlog_error(loggers->common, "Failed to create thread for step launch.");        
+        zlog_error(loggers->common, "Failed to create thread for step launch. [%s]", GetLastError());        
     }  
 }
 
