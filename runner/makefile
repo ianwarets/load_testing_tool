@@ -3,29 +3,31 @@
 
 CC=gcc
 CFLAGS=-Wall
+ifeq ($(mode), debug)
+	CFLAGS+=-g3 -O0 -DDEBUG
+endif
 
-CURL=C:\Programming\C\libraries\curl-7.61.0
+CURL=C:\Programming\C\libraries\curl-7.61.1
 ZLIB=C:\Programming\C\libraries\zlib-1.2.11
-OPEN_SSL=C:\Programming\C\libraries\openssl-1.0.2p
 BROTLI=C:\Programming\C\libraries\libbrotli-master
 ZLOG=C:\Programming\C\libraries\WinZlog\Release
 UJSON4C=C:\Programming\C\libraries\ujson4c
 
 INCLUDE=-I$(CURL)\include -I$(ZLOG)\head -I$(UJSON4C)\include
-LDFLAGS=-L$(CURL)\lib -L$(ZLIB) -L$(OPEN_SSL)\lib -L$(BROTLI)\.libs -L$(ZLOG)\lib -L$(UJSON4C)\lib
-LDLIBS=-lcurl -lgdi32 -lwldap32 -lws2_32 -lz -lssl -lcrypto -lbrotlidec -lzlog -lujdecode
+LDFLAGS=-L$(CURL)\lib\.libs -L$(ZLIB) -L$(BROTLI)\.libs -L$(ZLOG)\lib -L$(UJSON4C)\lib -L.
+LDLIBS=-lcurl -lujdecode -lliblogger -lzlog
 
-REFS=main.o logger.o action_wrappers.o test_controller.o test_plan.o
+REFS=liblogger.dll main.o action_wrappers.o test_controller.o test_plan.o
 MACROS=-DCURL_STATICLIB
-EXENAME=loadlestingtool
+EXENAME=loadtestingtool
 
 all: build
 
-build: $(REFS)
-	$(CC) $(MACROS) $^ $(CFLAGS) $(INCLUDE) $(LDFLAGS) $(LDLIBS) -o $(EXENAME).exe
+build: $(REFS)	
+	$(CC) $^ $(CFLAGS) -o $(EXENAME).exe $(INCLUDE) $(LDFLAGS) $(LDLIBS) 
 
-debug: $(REFS)
-	$(CC) $(MACROS) -DDEBUG $^ $(CFLAGS) -g $(INCLUDE) $(LDFLAGS) $(LDLIBS) -o $(EXENAME).exe
+liblogger.dll: logger.o
+	$(CC) $< -Wall -shared -Wl,-soname,liblogger.so -o $@  -L$(ZLOG)\lib -lzlog
 
 main.o: main.c main.h
 	$(CC) -c $< $(CFLAGS) -I$(ZLOG)\head
@@ -40,4 +42,8 @@ action_wrappers.o: action_wrappers.c action_wrappers.h
 	$(CC) -c $< $(CFLAGS) -I$(ZLOG)\head
 
 logger.o: logger.c logger.h
-	$(CC) -c $< $(CFLAGS) -I$(ZLOG)\head
+	$(CC) -c -fPIC $< $(CFLAGS) -I$(ZLOG)\head
+
+clean:
+	del /S *.o
+	del /S liblogger.*

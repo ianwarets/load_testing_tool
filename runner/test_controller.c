@@ -5,31 +5,31 @@ extern zlog_categories * loggers;
  * Функция запуска/останова потоков ступени. 
  * Запускается в потоке, чтоб не задерживать отсчет времени для следующих ступеней.
  */
-static DWORD WINAPI run_step_threads(LPVOID parameter){
+static DWORD WINAPI control_step_threads(LPVOID parameter){
     step_data current_step = *((step_data*)parameter);
     zlog_debug(loggers->common, 
-            "%s %i threads with delay of %li", 
+            "%s %i threads with delay of %li.", 
             current_step.to_start ? "Starting" : "Stopping",
             current_step.threads_count,
             current_step.slope_delay);
     long slope_interval = current_step.slope_delay / current_step.threads_count;
     if(current_step.to_start){     
-        zlog_info(loggers->common, "Creating threads for step");   
+        zlog_info(loggers->common, "Creating threads for step.");   
         for(long i = 0; i < current_step.threads_count; i++){
-            zlog_debug(loggers->common, "Creating step thread № %i", i);
-            current_step.threads_array[i].thread = CreateThread(NULL, 0, current_step.threads_array[i].run_action_function, current_step.param, 0, NULL);
+            zlog_debug(loggers->common, "Creating step thread # %i", i);
+            current_step.threads_array[i].thread = CreateThread(NULL, 0, current_step.threads_array[i].action->run_action_function, (PVOID)(&current_step.threads_array[i]), 0, NULL);
             if(current_step.threads_array[i].thread == NULL){
-                zlog_error(loggers->common, "Failed to create thread for step. Thread № %i", i);
+                zlog_error(loggers->common, "Failed to create thread for step. Thread # %i.", i);
                 continue;
             }
-            zlog_debug(loggers->common, "Thread № %i for step created. Sleep for %li", i, slope_interval);
+            zlog_debug(loggers->common, "Thread # %i for step created. Sleep for %li.", i, slope_interval);
             Sleep(slope_interval);
         }
     }
     else{
-        zlog_info(loggers->common, "Stopping threads for step");
+        zlog_info(loggers->common, "Stopping threads for step.");
         for(long i = 0; i < current_step.threads_count; i++){
-            zlog_debug(loggers->common, "Signaling thread № %i to stop", i);
+            zlog_debug(loggers->common, "Signaling thread # %i to stop", i);
             current_step.threads_array[i].stop_flag = 1;
             zlog_debug(loggers->common, "Sleep for %li", slope_interval);
             Sleep(slope_interval);                       
@@ -43,9 +43,9 @@ static DWORD WINAPI run_step_threads(LPVOID parameter){
  */
 static VOID CALLBACK step_routine(LPVOID p_step_data, DWORD lowTimer, DWORD highTimer){
     zlog_info(loggers->common, "Running step routine thread.");
-    HANDLE step_thread = CreateThread(NULL, 0, run_step_threads, p_step_data, 0, NULL);
+    HANDLE step_thread = CreateThread(NULL, 0, control_step_threads, p_step_data, 0, NULL);
     if(!step_thread){
-        zlog_error(loggers->common, "Failed to create thread for step launch. [%s]", GetLastError());        
+        zlog_error(loggers->common, "Failed to create thread for step launch. [%s].", GetLastError());        
     }  
 }
 
@@ -55,32 +55,34 @@ DWORD WINAPI test_controller(LPVOID p_runner_data){
     security_attr.nLength = sizeof(SECURITY_ATTRIBUTES);
     security_attr.bInheritHandle = FALSE;
     security_attr.lpSecurityDescriptor = NULL;
-    
-    LARGE_INTEGER start_time = {.QuadPart = 0};
-    long duration = r_data.start_delay;
-    zlog_debug(loggers->common, "Start delay : %li", duration);
+    //TODO: In case when no start delay, run first step imediate without timer creation
+    long long next_time_interval = r_data.start_delay;
+    long long multiplixier = -10000000LL;
+    LARGE_INTEGER start_time = {.QuadPart = next_time_interval * multiplixier};
+    zlog_debug(loggers->common, "Start delay : %li", r_data.start_delay);
     step_data * step;    
     long step_index = 0;
     while(step_index < r_data.steps_count){
         step = &(r_data.steps[step_index++]); 
         HANDLE step_timer = CreateWaitableTimer(&security_attr, TRUE, "Local: Step timer.");
         if(step_timer == NULL){
-            zlog_error(loggers->common, "Failed to create timer for step № %i", step_index);
+            zlog_error(loggers->common, "Failed to create timer for step # %i", step_index);
             ExitThread(ERR_CREATE_TIMER);
         }
-        BOOL result = SetWaitableTimer(step_timer, &start_time, duration, step_routine, step, FALSE);
+        BOOL result = SetWaitableTimer(step_timer, &start_time, 0, step_routine, step, FALSE);
         if(!result){
-            zlog_error(loggers->common, "Failed to set timer for step № %i", step_index);
+            zlog_error(loggers->common, "Failed to set timer for step # %i", step_index);
             ExitThread(ERR_SET_TIMER);
         }
         zlog_debug(loggers->common, "Thread sleep INFINITE.");
         SleepEx(INFINITE, TRUE);
         result = CancelWaitableTimer(step_timer);
         if(!result){
-            zlog_error(loggers->common, "Failed to cancel timer for step № %i", step_index);
+            zlog_error(loggers->common, "Failed to cancel timer for step # %i", step_index);
             ExitThread(ERR_CANCEL_TIMER);
         }
-        duration = step->next_step_time_interval + step->slope_delay;        
+        next_time_interval = step->next_step_time_interval + step->slope_delay;
+        start_time.QuadPart = next_time_interval * multiplixier;
     }
     return 0;
 }

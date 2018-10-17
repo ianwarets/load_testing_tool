@@ -11,5 +11,6 @@ typedef struct{
     transaction_status status;
 } transaction;
 
-transaction transaction_begin(char *);
-void transaction_end(transaction *, transaction_status);
+void transaction_init();
+transaction transaction_begin(char * name);
+void transaction_end(transaction * trnsctn, transaction_status);

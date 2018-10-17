@@ -9,7 +9,7 @@
             "group": "build",
             "command": "mingw32-make",
             "args": [
-                "debug"
+                "mode=debug"
             ],
             "problemMatcher": [
                 "$gcc"
@@ -20,6 +20,9 @@
             "type": "shell",
             "group": "build",
             "command": "mingw32-make",
+            "args": [
+                "mode=release"
+            ],
             "problemMatcher": [
                 "$gcc"
             ]

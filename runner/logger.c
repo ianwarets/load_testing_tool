@@ -1,10 +1,10 @@
 #include "logger.h"
 #include <stdlib.h>
 
-zlog_categories * loggers = NULL;
+static zlog_categories * loggers = NULL;
 
 // Выполнить однократнуню инициализацию.
-int logger_init(){
+int logger_init(){	
 	if(loggers != NULL){
 		return 0;
 	}
@@ -42,8 +42,14 @@ int logger_init(){
 	return 0;
 }
 
-int logger_close(){
+zlog_categories * logger_get_loggers(){
+	if(loggers == NULL){
+		fprintf(stderr, "Loggers are not initialized.\n");		
+	}
+	return loggers;
+}
+
+void logger_close(){
 	free(loggers);
 	zlog_fini();
-	return 0;
 }

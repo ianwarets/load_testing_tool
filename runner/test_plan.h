@@ -2,9 +2,9 @@
 #include <wchar.h>
 
 typedef struct {
-    const wchar_t * action_file_name;    
+    wchar_t * action_file_name;    
     long pacing;
-    const wchar_t * pacing_type;
+    wchar_t * pacing_type;
     long percentage;
 } action;
 
@@ -16,7 +16,7 @@ typedef struct {
 } test_step;
 
 typedef struct {
-    const wchar_t * name;
+    wchar_t * name;
     int start_delay;
     test_step * steps;
     int steps_count;

@@ -17,6 +17,7 @@
         "typeinfo": "c",
         "http_requests.h": "c",
         "unordered_map": "c",
-        "zlog.h": "c"
+        "zlog.h": "c",
+        "main.h": "c"
     }
 }

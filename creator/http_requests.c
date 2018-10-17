@@ -1,20 +1,21 @@
-#include <curl/curl.h>
+#include "http_requests.h"
 #include <string.h>
 #include <time.h>
+#include <windows.h>
 #include <logger.h>
-#include "http_requests.h"
 
 
 static long http_request(char *, char*, struct curl_slist *, response_data_struct *);
 static size_t save_response_data(void*, size_t, size_t, void *);
 static void save_request_statistics();
 static CURL * hCurl;
-extern zlog_categories * loggers;
+static zlog_categories * loggers;
 
 int init_http_requests(){
+	loggers = logger_get_loggers();
 	hCurl = curl_easy_init();
 	if(hCurl == NULL){
-		zlog_fatal(loggers->scenario, "Failed to create CURL handler");
+		zlog_fatal(loggers->scenario, "Failed to create CURL handler.");
 		return -1;
 	}
 	return 0;
@@ -24,15 +25,6 @@ void http_request_cleanup(){
 	curl_easy_cleanup(hCurl);
 }
 
-/**
- *	Выполнение GET запроса.
- *	@param name - имя запроса.
- *	@param hCurl - объект библиотеки CURL.
- * 	@param url - адрес выполнения запроса.
- *	@param headers - указатель на структуру хранящую заголовки запроса. struct curl_slist.
- * 	@response_data - указатель на структуру предназначенную для сохранения полученного в результате запроса ответа. 
- */
-
 long get_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){		
 	zlog_info(loggers->scenario, "get_request");
 	zlog_debug(loggers->scenario, "URL:%s, curl_slist has value:%c, response_data_struct has value:%c", url, ((headers == NULL) ? 'n' : 'y'), ((response_data == NULL) ? 'n' : 'y'));
@@ -40,13 +32,6 @@ long get_request(char * name, char * url, struct curl_slist * headers, response_
 	return http_request(name, url, headers, response_data);	
 }
 
-/**
- *	Выполнение POST запроса.
- *	@param name - имя запроса.
- * 	@param url - адрес выполнения запроса.
- *	@param headers - указатель на структуру хранящую заголовки запроса. struct curl_slist.
- * 	@response_data - указатель на структуру предназначенную для сохранения полученного в результате запроса ответа. 
- */
 long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){
 	zlog_info(loggers->scenario, "post_request");
 	zlog_debug(loggers->scenario, "URL:%s, curl_slist has value:%c, response_data_struct has value:%c", url, (headers == NULL) ? 'n' : 'y', (response_data == NULL) ? 'n' : 'y');
@@ -114,15 +99,6 @@ static void save_request_statistics(char * name){
 	download_speed,
 	time);
 
-	// return(request_tech_data){
-	// 	.time = time,
-	// 	.response_time = response_time,
-	// 	.netw_delay = network_delay,
-	// 	.uploaded_bytes = uploaded_bytes,
-	// 	.received_bytes = received_bytes + header_size,
-	// 	.upload_speed = upload_speed,
-	// 	.download_speed = download_speed
-	// };
 	char * message_template = "%li,%s,%lli,%lli,%li,%lli,%lli,%lli";
 	zlog_info(loggers->statistics, 
 			message_template, 
@@ -255,10 +231,6 @@ static size_t save_response_data(void* buffer, size_t size, size_t nmemb, void *
 	return result;
 }
 
-
-/**
- *	Получить значение заголовка Location 
- */
 char * get_redirect_link(){
 	char * redir_url = NULL;
 	curl_easy_getinfo(hCurl, CURLINFO_REDIRECT_URL , &redir_url);

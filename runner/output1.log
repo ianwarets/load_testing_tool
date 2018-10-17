@@ -1,0 +1,259 @@
+2018-10-17 15:33:43.036 INFO   get_request
+2018-10-17 15:33:43.037 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.040 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.040 INFO   Enabling TLS.
+2018-10-17 15:33:43.040 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.040 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.045 INFO   Setting write function.
+2018-10-17 15:33:43.046 INFO   Setting write data pointer.
+2018-10-17 15:33:43.046 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.046 INFO   Setting private request data.
+2018-10-17 15:33:43.046 INFO   Performing cUrl request.
+2018-10-17 15:33:43.270 INFO   get_request
+2018-10-17 15:33:43.270 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.270 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.270 INFO   Enabling TLS.
+2018-10-17 15:33:43.271 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.271 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.271 INFO   Setting write function.
+2018-10-17 15:33:43.271 INFO   Setting write data pointer.
+2018-10-17 15:33:43.271 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.271 INFO   Setting private request data.
+2018-10-17 15:33:43.271 INFO   Performing cUrl request.
+2018-10-17 15:33:43.886 DEBUG  size * nmemb = 219.
+2018-10-17 15:33:43.887 INFO   Allocating memory for userp->data.
+2018-10-17 15:33:43.887 DEBUG  Response pointer value: 02F0FEE8.	response_last_byte pointer value: 02B1FB27.
+2018-10-17 15:33:43.887 INFO   Copiyng from [buffer] to [userp->data].
+2018-10-17 15:33:43.891 DEBUG  hCurl has value:y
+2018-10-17 15:33:43.891 INFO   Getting: CURLINFO_TOTAL_TIME_T
+2018-10-17 15:33:43.892 INFO   Getting: CURLINFO_CONNECT_TIME_T
+2018-10-17 15:33:43.892 INFO   Getting: CURLINFO_REQUEST_SIZE
+2018-10-17 15:33:43.893 INFO   Getting: CURLINFO_SIZE_DOWNLOAD_T
+2018-10-17 15:33:43.893 INFO   Getting: CURLINFO_HEADER_SIZE
+2018-10-17 15:33:43.893 INFO   Getting: CURLINFO_SPEED_UPLOAD_T
+2018-10-17 15:33:43.894 INFO   Getting: CURLINFO_SPEED_DOWNLOAD_T
+2018-10-17 15:33:43.894 INFO   Getting: CURLINFO_PRIVATE
+2018-10-17 15:33:43.895 DEBUG  	CURLINFO_TOTAL_TIME_T : 610000
+	CURLINFO_CONNECT_TIME_T : 485000
+	CURLINFO_REQUEST_SIZE : 102
+	CURLINFO_SIZE_DOWNLOAD_T : 219
+	CURLINFO_HEADER_SIZE : 321
+	CURLINFO_SPEED_UPLOAD_T : 0
+	CURLINFO_SPEED_DOWNLOAD_T : 359
+	CURLINFO_PRIVATE : [time]:16575424
+2018-10-17 15:33:43.899 INFO   get_request
+2018-10-17 15:33:43.899 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.899 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.900 INFO   Enabling TLS.
+2018-10-17 15:33:43.900 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.900 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.901 INFO   Setting write function.
+2018-10-17 15:33:43.901 INFO   Setting write data pointer.
+2018-10-17 15:33:43.902 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.902 INFO   Setting private request data.
+2018-10-17 15:33:43.903 INFO   Performing cUrl request.
+2018-10-17 15:33:43.910 DEBUG  size * nmemb = 219.
+2018-10-17 15:33:43.910 INFO   Allocating memory for userp->data.
+2018-10-17 15:33:43.911 DEBUG  Response pointer value: 0310FEE8.	response_last_byte pointer value: 00FC3A3F.
+2018-10-17 15:33:43.912 INFO   Copiyng from [buffer] to [userp->data].
+2018-10-17 15:33:43.913 DEBUG  hCurl has value:y
+2018-10-17 15:33:43.913 INFO   Getting: CURLINFO_TOTAL_TIME_T
+2018-10-17 15:33:43.913 INFO   Getting: CURLINFO_CONNECT_TIME_T
+2018-10-17 15:33:43.914 INFO   Getting: CURLINFO_REQUEST_SIZE
+2018-10-17 15:33:43.914 INFO   Getting: CURLINFO_SIZE_DOWNLOAD_T
+2018-10-17 15:33:43.914 INFO   Getting: CURLINFO_HEADER_SIZE
+2018-10-17 15:33:43.914 INFO   Getting: CURLINFO_SPEED_UPLOAD_T
+2018-10-17 15:33:43.915 INFO   Getting: CURLINFO_SPEED_DOWNLOAD_T
+2018-10-17 15:33:43.915 INFO   Getting: CURLINFO_PRIVATE
+2018-10-17 15:33:43.916 DEBUG  	CURLINFO_TOTAL_TIME_T : 0
+	CURLINFO_CONNECT_TIME_T : 0
+	CURLINFO_REQUEST_SIZE : 0
+	CURLINFO_SIZE_DOWNLOAD_T : 219
+	CURLINFO_HEADER_SIZE : 0
+	CURLINFO_SPEED_UPLOAD_T : 0
+	CURLINFO_SPEED_DOWNLOAD_T : 359
+	CURLINFO_PRIVATE : [time]:45215592
+2018-10-17 15:33:43.918 INFO   get_request
+2018-10-17 15:33:43.918 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.919 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.919 INFO   Enabling TLS.
+2018-10-17 15:33:43.919 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.920 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.920 INFO   Setting write function.
+2018-10-17 15:33:43.920 INFO   Setting write data pointer.
+2018-10-17 15:33:43.921 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.921 INFO   Setting private request data.
+2018-10-17 15:33:43.922 INFO   Performing cUrl request.
+2018-10-17 15:33:43.927 INFO   get_request
+2018-10-17 15:33:43.927 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.927 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.927 INFO   Enabling TLS.
+2018-10-17 15:33:43.928 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.928 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.928 INFO   Setting write function.
+2018-10-17 15:33:43.928 INFO   Setting write data pointer.
+2018-10-17 15:33:43.929 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.929 INFO   Setting private request data.
+2018-10-17 15:33:43.929 INFO   Performing cUrl request.
+2018-10-17 15:33:43.936 INFO   get_request
+2018-10-17 15:33:43.937 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.937 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.937 INFO   Enabling TLS.
+2018-10-17 15:33:43.937 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.938 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.938 INFO   Setting write function.
+2018-10-17 15:33:43.938 INFO   Setting write data pointer.
+2018-10-17 15:33:43.938 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.938 INFO   Setting private request data.
+2018-10-17 15:33:43.939 INFO   Performing cUrl request.
+2018-10-17 15:33:43.941 INFO   get_request
+2018-10-17 15:33:43.941 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.941 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.942 INFO   Enabling TLS.
+2018-10-17 15:33:43.942 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.942 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.942 INFO   Setting write function.
+2018-10-17 15:33:43.942 INFO   Setting write data pointer.
+2018-10-17 15:33:43.942 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.943 INFO   Setting private request data.
+2018-10-17 15:33:43.943 INFO   Performing cUrl request.
+2018-10-17 15:33:43.947 INFO   get_request
+2018-10-17 15:33:43.947 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.947 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.948 INFO   Enabling TLS.
+2018-10-17 15:33:43.948 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.948 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.948 INFO   Setting write function.
+2018-10-17 15:33:43.949 INFO   Setting write data pointer.
+2018-10-17 15:33:43.949 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.949 INFO   Setting private request data.
+2018-10-17 15:33:43.950 INFO   Performing cUrl request.
+2018-10-17 15:33:43.952 INFO   get_request
+2018-10-17 15:33:43.953 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.953 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.954 INFO   Enabling TLS.
+2018-10-17 15:33:43.954 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.955 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.955 INFO   Setting write function.
+2018-10-17 15:33:43.955 INFO   Setting write data pointer.
+2018-10-17 15:33:43.955 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.956 INFO   Setting private request data.
+2018-10-17 15:33:43.956 INFO   Performing cUrl request.
+2018-10-17 15:33:43.959 INFO   get_request
+2018-10-17 15:33:43.959 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.959 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.960 INFO   Enabling TLS.
+2018-10-17 15:33:43.960 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.960 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.960 INFO   Setting write function.
+2018-10-17 15:33:43.960 INFO   Setting write data pointer.
+2018-10-17 15:33:43.961 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.961 INFO   Setting private request data.
+2018-10-17 15:33:43.961 INFO   Performing cUrl request.
+2018-10-17 15:33:43.963 INFO   get_request
+2018-10-17 15:33:43.964 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.964 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.964 INFO   Enabling TLS.
+2018-10-17 15:33:43.965 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.965 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.965 INFO   Setting write function.
+2018-10-17 15:33:43.965 INFO   Setting write data pointer.
+2018-10-17 15:33:43.965 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.966 INFO   Setting private request data.
+2018-10-17 15:33:43.966 INFO   Performing cUrl request.
+2018-10-17 15:33:43.970 INFO   get_request
+2018-10-17 15:33:43.971 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.971 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.971 INFO   Enabling TLS.
+2018-10-17 15:33:43.971 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.971 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.971 INFO   Setting write function.
+2018-10-17 15:33:43.971 INFO   Setting write data pointer.
+2018-10-17 15:33:43.971 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.972 INFO   Setting private request data.
+2018-10-17 15:33:43.972 INFO   Performing cUrl request.
+2018-10-17 15:33:43.975 INFO   get_request
+2018-10-17 15:33:43.975 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.975 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.975 INFO   Enabling TLS.
+2018-10-17 15:33:43.976 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.976 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.976 INFO   Setting write function.
+2018-10-17 15:33:43.976 INFO   Setting write data pointer.
+2018-10-17 15:33:43.976 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.977 INFO   Setting private request data.
+2018-10-17 15:33:43.977 INFO   Performing cUrl request.
+2018-10-17 15:33:43.980 INFO   get_request
+2018-10-17 15:33:43.980 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.980 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.981 INFO   Enabling TLS.
+2018-10-17 15:33:43.981 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.981 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.981 INFO   Setting write function.
+2018-10-17 15:33:43.982 INFO   Setting write data pointer.
+2018-10-17 15:33:43.982 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.982 INFO   Setting private request data.
+2018-10-17 15:33:43.983 INFO   Performing cUrl request.
+2018-10-17 15:33:43.986 INFO   get_request
+2018-10-17 15:33:43.987 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.987 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.987 INFO   Enabling TLS.
+2018-10-17 15:33:43.987 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.988 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.988 INFO   Setting write function.
+2018-10-17 15:33:43.988 INFO   Setting write data pointer.
+2018-10-17 15:33:43.988 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:43.988 INFO   Setting private request data.
+2018-10-17 15:33:43.989 INFO   Performing cUrl request.
+2018-10-17 15:33:43.996 INFO   get_request
+2018-10-17 15:33:43.997 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:43.997 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:43.997 INFO   Enabling TLS.
+2018-10-17 15:33:43.998 INFO   Setting certificate storage file name.
+2018-10-17 15:33:43.998 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:43.998 INFO   Setting write function.
+2018-10-17 15:33:43.998 INFO   Setting write data pointer.
+2018-10-17 15:33:43.999 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:44.000 INFO   Setting private request data.
+2018-10-17 15:33:44.000 INFO   Performing cUrl request.
+2018-10-17 15:33:44.010 INFO   get_request
+2018-10-17 15:33:44.010 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:44.011 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:44.011 INFO   Enabling TLS.
+2018-10-17 15:33:44.011 INFO   Setting certificate storage file name.
+2018-10-17 15:33:44.011 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:44.012 INFO   Setting write function.
+2018-10-17 15:33:44.012 INFO   Setting write data pointer.
+2018-10-17 15:33:44.012 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:44.012 INFO   Setting private request data.
+2018-10-17 15:33:44.013 INFO   Performing cUrl request.
+2018-10-17 15:33:44.021 INFO   get_request
+2018-10-17 15:33:44.021 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:33:44.022 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:33:44.022 INFO   Enabling TLS.
+2018-10-17 15:33:44.023 INFO   Setting certificate storage file name.
+2018-10-17 15:33:44.023 INFO   Setting accept encoding to all types.
+2018-10-17 15:33:44.024 INFO   Setting write function.
+2018-10-17 15:33:44.024 INFO   Setting write data pointer.
+2018-10-17 15:33:44.024 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:33:44.025 INFO   Setting private request data.
+2018-10-17 15:33:44.025 INFO   Performing cUrl request.
+2018-10-17 15:33:44.035 DEBUG  size * nmemb = 219.
+2018-10-17 15:33:44.036 INFO   Reallocating memory for userp->data.
+2018-10-17 15:36:37.575 DEBUG  Response pointer value: 0310FEE8.	response_last_byte pointer value: 000000DA.
+2018-10-17 15:36:37.576 INFO   Copiyng from [buffer] to [userp->data].
+2018-10-17 15:36:54.268 INFO   get_request
+2018-10-17 15:36:54.268 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:36:54.268 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:36:54.268 INFO   Enabling TLS.
+2018-10-17 15:36:54.268 INFO   Setting certificate storage file name.
+2018-10-17 15:36:54.268 INFO   Setting accept encoding to all types.
+2018-10-17 15:36:54.268 INFO   Setting write function.
+2018-10-17 15:36:54.268 INFO   Setting write data pointer.
+2018-10-17 15:36:54.269 INFO   Headers parameter is empty. Using default user-agent: "libcurl".
+2018-10-17 15:36:54.269 INFO   Setting private request data.
+2018-10-17 15:36:54.269 INFO   Performing cUrl request.
+2018-10-17 15:36:54.269 INFO   get_request
+2018-10-17 15:36:54.270 DEBUG  URL:google.com, curl_slist has value:n, response_data_struct has value:y
+2018-10-17 15:36:54.270 DEBUG  CURLOPT_URL: google.com
+2018-10-17 15:36:54.270 INFO   Enabling TLS.

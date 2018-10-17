@@ -1,11 +1,16 @@
 #include "transactions.h"
-#include <logger.h>
 #include <windows.h>
+#include <logger.h>
+
 
 static void save_statistics(transaction *);
 static long long get_duration(transaction *);
 static long long get_ticks_count();
-extern zlog_categories * loggers;
+static zlog_categories * loggers;
+
+void transaction_init(){
+    loggers = logger_get_loggers();
+}
 
 transaction transaction_begin(char * name){
     // Получить текущее значение времени. Передать полученное значение и название транзакции в хранилище    

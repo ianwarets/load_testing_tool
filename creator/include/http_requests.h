@@ -1,3 +1,4 @@
+#include <curl/curl.h>
 /**
  *   Структура, для хранения полученных данных и их объема
  */
@@ -6,30 +7,38 @@ typedef struct {
 	size_t size;
 }response_data_struct;
 
-typedef struct {
-    //Request start time
-    time_t * time;
-    // Response time in microseconds.
-    curl_off_t    response_time;
-    // Network delay time in microseconds.
-    curl_off_t    netw_delay;
-    // Amount of uploaded bytes.
-    curl_off_t    uploaded_bytes;
-    // Amount of received bytes.
-    curl_off_t    received_bytes;
-    // Upload speed in bytes/second
-    curl_off_t    upload_speed;
-    // Download speed in bytes/second
-    curl_off_t    download_speed;
-}request_tech_data;
-
-typedef struct {
-    char * name;
-    time_t time;
-} request_private_data;
-
+/**
+ * Инициализация библиотеки запросов.
+ * @return - 0 в случае успеха, 1 в случае неудачной инициализации.
+ */
 int init_http_requests();
 void http_request_cleanup();
-long get_request(char *, char*, struct curl_slist *, response_data_struct *);
-long post_request(char *, char*, struct curl_slist *, response_data_struct *);
+
+
+/**
+ *	Выполнение GET запроса.
+ *	@param name - имя запроса.
+ *	@param hCurl - объект библиотеки CURL.
+ * 	@param url - адрес выполнения запроса.
+ *	@param headers - указатель на структуру хранящую заголовки запроса. struct curl_slist.
+ * 	@param response_data - указатель на структуру предназначенную для сохранения полученного в результате запроса ответа. 
+ *	@return код ответа
+ */
+long get_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data);
+
+
+/**
+ *	Выполнение POST запроса.
+ *	@param name - имя запроса.
+ * 	@param url - адрес выполнения запроса.
+ *	@param headers - указатель на структуру хранящую заголовки запроса. struct curl_slist.
+ * 	@param response_data - указатель на структуру предназначенную для сохранения полученного в результате запроса ответа. 
+ *	@return код ответа
+ */
+long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data);
+
+
+/**
+ *	Получить значение заголовка Location 
+ */
 char * get_redirect_link();

@@ -2,24 +2,19 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
-    "tasks": [    
+    "tasks": [
         {
             "label": "build",
             "type": "shell",
-            "group": "build",
-            "command": "mingw32-make",
+            "command": "runner/mingw32-make build",
             "problemMatcher": [
                 "$gcc"
             ]
-        },    
+        },
         {
             "label": "debug",
-            "type": "shell",            
-            "group": "build",
-            "command": "mingw32-make",
-            "args": [
-                "mode=debug"
-            ],
+            "type": "shell",
+            "command": "runner/mingw32-make debug",
             "problemMatcher": [
                 "$gcc"
             ]

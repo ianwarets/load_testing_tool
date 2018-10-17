@@ -14,15 +14,14 @@ typedef struct{
     void(*init)();
     void(*end)();
     void(*action)();
-    void * user_data;
     HMODULE library_handler;
+    LPTHREAD_START_ROUTINE run_action_function;
 } action_data;
 
 typedef struct{
     HANDLE thread;
     _Atomic int stop_flag;
-    action_data * action;
-    LPTHREAD_START_ROUTINE run_action_function;
+    action_data * action;    
     DWORD pacing;
 } thread_data;
 

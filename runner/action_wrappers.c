@@ -41,12 +41,12 @@ static DWORD actions_wrapper(LPVOID thread_params, void(*pacing_function)()){
     void (*action)() = t_data->action->action;
     void (*end_routine)() = t_data->action->end;
 
-    init_routine(t_data->action->user_data);
+    init_routine();
     do{
         pacing_function(action, thread_params, t_data->pacing);
     }
     while(!t_data->stop_flag);    
-    end_routine(t_data->action);
+    end_routine();
     return 0;
 }
 

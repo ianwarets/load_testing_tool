@@ -2,31 +2,40 @@
 # MAKEFILE
 
 CC=gcc
-CFLAGS=-Wall -c
+
+CC=gcc
+
+CFLAGS=-Wall -fPIC -c
+
+ifeq ($(mode), debug)
+	CFLAGS+=-Wall -fPIC -c -g3 -O0 -DDEBUG
+endif
+
 
 CDIR=C:\Programming\C
-CURL=$(CDIR)\libraries\curl-7.61.0
+CURL=$(CDIR)\libraries\curl-7.61.1
 ZLIB=$(CDIR)\libraries\zlib-1.2.11
 OPEN_SSL=$(CDIR)\libraries\openssl-1.0.2p
 BROTLI=$(CDIR)\libraries\libbrotli-master
 ZLOG=$(CDIR)\libraries\WinZlog\Release
-LTT=$(CDIR)\load_testing_tool\runner
+LTT=..\runner
 
-INCLUDE=-I$(CURL)\include -I$(ZLOG)\head -I$(LTT)
-LDFLAGS=-L$(CURL)\lib -L$(ZLIB) -L$(OPEN_SSL)\lib -L$(BROTLI)\.libs
-LDLIBS=-lcurl -lgdi32 -lwldap32 -lws2_32 -lz -lssl -lcrypto -lbrotlidec
+INCLUDE=-I$(CURL)\include -I$(ZLOG)\head -I$(LTT) -Iinclude
+LDPATH=-L$(CURL)\lib\.libs -L$(ZLIB) -L$(OPEN_SSL)\lib -L$(BROTLI)\.libs -L$(ZLOG)\lib -L$(LTT)
+LDLIBS=-lcurl -lwldap32 -lz -lssl -lcrypto -lgdi32 -lbrotlidec -lws2_32 -lzlog -lliblogger
 
-REFS=bin/static/http_requests.o bin/static/transactions.o
+REFS=bin/http_requests.o bin/transactions.o
 MACROS=-DCURL_STATICLIB
 
-all: build
+all: $(REFS)
+	$(CC) -Wall -shared -fPIC -Wl,-soname,libtrans.so -o bin\libtrans.dll bin/transactions.o -I$(LTT) -L$(LTT) -L$(ZLOG)\lib -lzlog -lliblogger
+	$(CC) -Wall -shared -fPIC -Wl,-soname,libhreq.so -o bin\libhreq.dll bin/http_requests.o $(INCLUDE) $(LDPATH) $(LDLIBS) 
 
-static: $(REFS)
-	ar rcs  bin/static/libhreq.a bin/static/http_requests.o
-	ar rcs bin/static/libtrans.a bin/static/transactions.o
+bin/http_requests.o: http_requests.c
+	$(CC) $(CFLAGS)  $(INCLUDE) $< -o $@
 
-bin/static/http_requests.o: http_requests.c http_requests.h
-	$(CC) $(MACROS) $(CFLAGS) $< $(INCLUDE) $(LDFLAGS) $(LDLIBS) -o $@
+bin/transactions.o: transactions.c
+	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
 
-bin/static/transactions.o: transactions.c transactions.h
-	$(CC) $(CFLAGS) $< $(INCLUDE) -o $@
+clean:
+	del /S *.o

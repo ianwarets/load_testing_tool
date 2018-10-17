@@ -1,0 +1,473 @@
+2018-10-17 15:50:02.442 INFO  (test_plan.c)generate_runner_data: Starting reading data from test plan file.
+2018-10-17 15:50:02.442 INFO  (test_plan.c)read_test_plan: Opening test plan data file.
+2018-10-17 15:50:02.442 DEBUG (test_plan.c)read_test_plan: Test plan file size is : 416
+2018-10-17 15:50:02.442 INFO  (test_plan.c)read_test_plan: Allocating memory for test plan file content.
+2018-10-17 15:50:02.442 INFO  (test_plan.c)read_test_plan: Closing test plan file.
+2018-10-17 15:50:02.442 INFO  (test_plan.c)generate_runner_data: Starting creating test plan structure from JSON text file.
+2018-10-17 15:50:02.442 INFO  (test_plan.c)create_test_plan_from_json: Calling UJDecode function.
+2018-10-17 15:50:02.442 INFO  (test_plan.c)create_test_plan_from_json: Calling UJObjectUnpack for parsing main JSON object.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)save_json_string: Calling UJReadString for test name.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for start delay.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)create_test_plan_from_json: Calling UJBeginArray for actions array.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)create_test_plan_from_json: Starting cycle of getting actions data to structure.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)create_test_plan_from_json: Allocating memory for actions array for every one new element.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)create_test_plan_from_json: Calling UJObjectUnpack for action object element.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)save_json_string: Calling UJReadString for action file name.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for pacing.
+2018-10-17 15:50:02.444 INFO  (test_plan.c)save_json_string: Calling UJReadString for pacing type.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for percentage.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Actions successfully parsed. Starting UJBeginArray for steps array.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Starting cycle of getting steps data to structure.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Allocating memory for steps array for every one new element.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJObjectUnpack for step object element.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)save_json_string: Calling UJReadString for step type.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step duration.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step threads count.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step slope duration.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Allocating memory for steps array for every one new element.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJObjectUnpack for step object element.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)save_json_string: Calling UJReadString for step type.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step duration.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step threads count.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step slope duration.
+2018-10-17 15:50:02.445 INFO  (test_plan.c)create_test_plan_from_json: Calling UJFree.
+2018-10-17 15:50:02.685 DEBUG (test_plan.c)generate_runner_data: Step #0: Next step time interval: 3000, Slope delay: 0, Threads count: 2.
+2018-10-17 15:50:02.685 DEBUG (test_plan.c)generate_runner_data: Step #1: Next step time interval: 0, Slope delay: 0, Threads count: 5.
+2018-10-17 15:50:02.689 DEBUG (test_controller.c)test_controller: Start delay : 0
+2018-10-17 15:50:02.689 DEBUG (test_controller.c)test_controller: Thread sleep INFINITE.
+2018-10-17 15:50:02.689 INFO  (test_controller.c)step_routine: Running step routine thread.
+2018-10-17 15:50:02.691 DEBUG (test_controller.c)test_controller: Thread sleep INFINITE.
+2018-10-17 15:50:07.871 DEBUG (test_controller.c)control_step_threads: Starting 2 threads with delay of 0.
+2018-10-17 15:50:07.871 INFO  (test_controller.c)control_step_threads: Creating threads for step.
+2018-10-17 15:50:07.871 DEBUG (test_controller.c)control_step_threads: Creating step thread # 0
+2018-10-17 15:50:07.872 DEBUG (test_controller.c)control_step_threads: Thread # 0 for step created. Sleep for 0.
+2018-10-17 15:50:07.873 DEBUG (test_controller.c)control_step_threads: Creating step thread # 1
+2018-10-17 15:50:07.874 DEBUG (test_controller.c)control_step_threads: Thread # 1 for step created. Sleep for 0.
+2018-10-17 15:50:08.396 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 521619. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.398 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1040. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.399 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 973. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.401 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1449. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.404 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2770. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.408 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 4349. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.410 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1172. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.411 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1927. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.413 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1595. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.415 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1400. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.417 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1384. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.418 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1164. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.419 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 727. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.421 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1402. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.424 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 3143. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.425 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 697. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.426 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 788. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.427 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 782. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.428 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 783. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.430 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 732. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.431 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 749. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.433 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1893. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.434 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 922. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.435 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 833. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.436 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.437 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 829. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.441 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2585. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.442 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 773. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.444 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1998. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.445 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 915. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.446 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 831. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.447 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 790. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.448 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 804. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.449 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 791. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.451 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1428. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.452 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 761. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.454 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1981. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.455 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 801. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.457 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1745. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.458 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 771. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.459 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 789. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.459 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 790. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.460 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 817. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.462 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 828. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.463 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 794. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.463 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 798. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.465 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 825. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.465 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 784. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.468 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1846. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.469 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 858. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.470 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1481. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.471 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 855. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.473 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1392. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.474 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 739. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.475 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 891. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.476 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 890. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.477 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 951. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.478 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 854. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.479 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 806. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.480 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 827. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.482 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2032. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.483 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1053. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.485 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1580. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.486 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 825. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.487 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 986. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.489 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1104. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.490 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1263. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.492 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 992. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.493 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1113. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.494 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 898. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.495 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 833. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.496 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 820. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.498 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1807. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.499 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 823. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.501 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1520. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.502 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 794. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.503 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 792. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.504 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 832. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.505 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 949. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.507 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1683. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.509 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 994. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.511 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2226. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.513 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1190. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.514 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1109. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.515 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1094. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.516 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1405. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.517 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 779. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.519 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1784. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.520 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 817. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.522 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 893. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.523 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1087. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.524 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 783. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.526 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1423. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.528 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1603. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.530 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1497. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.531 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 769. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.531 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 786. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.533 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 852. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.534 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 793. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.535 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1404. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.536 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 748. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.538 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1795. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.540 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1412. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.541 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 868. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.542 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 889. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.543 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 946. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.545 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1392. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.546 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 916. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.547 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1583. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.548 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 788. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.549 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 812. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.550 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 805. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.551 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 842. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.553 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 835. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.554 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1526. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.558 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 3122. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.559 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1151. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.560 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 953. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.561 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 899. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.562 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 846. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.563 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1305. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.565 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 872. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.566 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1715. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.568 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 823. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.569 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.570 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 790. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.570 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 792. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.573 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2709. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.575 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 845. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.576 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1767. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.577 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 797. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.578 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 787. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.579 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 793. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.580 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 801. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.581 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 845. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.583 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1526. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.584 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 916. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.586 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1582. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.588 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 784. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.589 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 983. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.590 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 722. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.591 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 808. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.592 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1713. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.593 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 856. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.595 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1748. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.596 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 794. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.597 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 811. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.598 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 795. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.599 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 814. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.600 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 797. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.602 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1759. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.603 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 872. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.606 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1896. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.607 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1148. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.609 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 935. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.610 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 813. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.610 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 779. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.612 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1335. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.613 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 903. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.615 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1694. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.616 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 808. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.617 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 840. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.618 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.619 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.620 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 818. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.623 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2582. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.625 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1414. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.626 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 873. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.627 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 906. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.628 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1253. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.630 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1154. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.631 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 895. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.632 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1464. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.633 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 873. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.635 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1769. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.636 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 825. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.637 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 790. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.639 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 977. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.640 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 798. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.641 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 810. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.643 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1413. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.644 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 898. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.645 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1689. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.647 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 824. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.648 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 855. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.648 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 776. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.649 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 793. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.651 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 876. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.651 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 766. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.652 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 846. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.653 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 784. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.654 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 890. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.656 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1550. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.657 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 913. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.658 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 842. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.659 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 837. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.660 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 792. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.661 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 809. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.662 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 845. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.663 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 785. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.664 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 777. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.665 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 831. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.668 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2707. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.669 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 928. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.670 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1001. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.672 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1270. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.673 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 773. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.674 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 898. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.675 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 934. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.676 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 846. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.677 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 827. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.678 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 784. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.679 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 816. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.680 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 842. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.682 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1686. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.683 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 913. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.685 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1344. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.686 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 811. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.687 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.689 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1267. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.690 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 854. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.691 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 853. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.692 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.693 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 846. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.694 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 798. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.695 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 791. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.696 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 813. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.699 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2456. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.700 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1083. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.701 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1203. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.702 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 864. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.704 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 831. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.705 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 836. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.706 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1646. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.708 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1426. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.709 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 860. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.711 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1683. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.712 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 821. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.713 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 798. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.714 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 795. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.715 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 782. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.715 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 821. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.717 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1645. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.718 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 885. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.720 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1801. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.722 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1481. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.724 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1059. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.725 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 754. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.725 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 790. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.727 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1644. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.728 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 933. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.730 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1884. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.731 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 898. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.732 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 845. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.733 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 792. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.734 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.736 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1585. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.737 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 724. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.741 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2952. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.741 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 733. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.742 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 787. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.743 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 832. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.744 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 798. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.746 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1319. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.747 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 858. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.749 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1704. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.750 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 813. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.751 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 793. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.752 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 793. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.753 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 838. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.754 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 787. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.757 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2416. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.758 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 980. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.760 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1673. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.761 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 898. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.762 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 835. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.763 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 795. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.764 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 834. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.766 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1579. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.767 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 988. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.769 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1537. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.770 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 835. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.771 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 841. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.772 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1323. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.773 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 805. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.775 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1376. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.776 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 806. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.778 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1849. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.779 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.780 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 785. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.781 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 797. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.782 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 845. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.783 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 859. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.785 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1689. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.787 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2168. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.789 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1276. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.790 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1111. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.791 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 787. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.792 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 888. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.794 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1646. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.797 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2344. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.798 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1224. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.799 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 731. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.800 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 729. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.801 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 839. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.803 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1371. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.804 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 808. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.807 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2911. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.808 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 855. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.809 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 764. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.810 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 794. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.810 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 789. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.812 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1342. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.813 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 848. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.815 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1819. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.817 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 825. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.818 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 783. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.819 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1153. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.820 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 908. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.821 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 796. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.824 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2548. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.825 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 874. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.827 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1582. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.828 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 747. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.828 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 789. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.829 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 839. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.831 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 831. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.833 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2127. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.835 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1306. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.837 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1350. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.838 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1002. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.840 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1618. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.841 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1043. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.843 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1678. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.844 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1002. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.846 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2008. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.847 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1121. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.849 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1212. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.850 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1133. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.852 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2269. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.854 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1215. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.856 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1619. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.858 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1314. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.859 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1119. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.860 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1333. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.862 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1066. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.863 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 790. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.864 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 852. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.865 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 800. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.867 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2208. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.868 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 988. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.869 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 946. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.871 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1065. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.872 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1397. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.874 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1105. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.875 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 864. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.876 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1142. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.877 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 875. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.878 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 831. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.879 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 839. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.880 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 813. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.882 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2025. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.883 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 882. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.885 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1281. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.886 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 783. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.887 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 832. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.888 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 993. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.889 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1094. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.891 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1103. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.892 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1083. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.893 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 791. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.894 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 781. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.895 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 832. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.897 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1847. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.898 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 921. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.900 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1308. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.901 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 896. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.903 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2117. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.905 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1482. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.908 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 2171. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.911 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 3077. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.913 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1056. Name: search_google. Status: FAIL
+2018-10-17 15:50:08.914 DEBUG (transactions.c)save_statistics: Start time: 0. Duration: 1571. Name: search_google. Status: FAIL
+2018-10-17 16:07:27.871 INFO  (test_plan.c)generate_runner_data: Starting reading data from test plan file.
+2018-10-17 16:07:27.871 INFO  (test_plan.c)read_test_plan: Opening test plan data file.
+2018-10-17 16:07:27.871 DEBUG (test_plan.c)read_test_plan: Test plan file size is : 416
+2018-10-17 16:07:27.871 INFO  (test_plan.c)read_test_plan: Allocating memory for test plan file content.
+2018-10-17 16:07:27.871 INFO  (test_plan.c)read_test_plan: Closing test plan file.
+2018-10-17 16:07:27.871 INFO  (test_plan.c)generate_runner_data: Starting creating test plan structure from JSON text file.
+2018-10-17 16:07:27.871 INFO  (test_plan.c)create_test_plan_from_json: Calling UJDecode function.
+2018-10-17 16:07:27.871 INFO  (test_plan.c)create_test_plan_from_json: Calling UJObjectUnpack for parsing main JSON object.
+2018-10-17 16:07:27.871 INFO  (test_plan.c)save_json_string: Calling UJReadString for test name.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for start delay.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJBeginArray for actions array.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Starting cycle of getting actions data to structure.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Allocating memory for actions array for every one new element.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJObjectUnpack for action object element.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)save_json_string: Calling UJReadString for action file name.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for pacing.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)save_json_string: Calling UJReadString for pacing type.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for percentage.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Actions successfully parsed. Starting UJBeginArray for steps array.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Starting cycle of getting steps data to structure.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Allocating memory for steps array for every one new element.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJObjectUnpack for step object element.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)save_json_string: Calling UJReadString for step type.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step duration.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step threads count.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step slope duration.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Allocating memory for steps array for every one new element.
+2018-10-17 16:07:27.872 INFO  (test_plan.c)create_test_plan_from_json: Calling UJObjectUnpack for step object element.
+2018-10-17 16:07:27.873 INFO  (test_plan.c)save_json_string: Calling UJReadString for step type.
+2018-10-17 16:07:27.873 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step duration.
+2018-10-17 16:07:27.873 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step threads count.
+2018-10-17 16:07:27.873 INFO  (test_plan.c)create_test_plan_from_json: Calling UJNumericInt for step slope duration.
+2018-10-17 16:07:27.873 INFO  (test_plan.c)create_test_plan_from_json: Calling UJFree.
+2018-10-17 16:07:28.150 DEBUG (test_plan.c)generate_runner_data: Step #0: Next step time interval: 3000, Slope delay: 0, Threads count: 2.
+2018-10-17 16:07:28.151 DEBUG (test_plan.c)generate_runner_data: Step #1: Next step time interval: 0, Slope delay: 0, Threads count: 5.
+2018-10-17 16:07:28.153 DEBUG (test_controller.c)test_controller: Start delay : 0
+2018-10-17 16:07:28.153 DEBUG (test_controller.c)test_controller: Thread sleep INFINITE.
+2018-10-17 16:07:28.153 INFO  (test_controller.c)step_routine: Running step routine thread.
+2018-10-17 16:07:28.154 DEBUG (test_controller.c)test_controller: Thread sleep INFINITE.
+2018-10-17 16:07:30.037 DEBUG (test_controller.c)control_step_threads: Starting 2 threads with delay of 0.
+2018-10-17 16:07:31.450 INFO  (test_controller.c)control_step_threads: Creating threads for step.
+2018-10-17 16:07:32.442 DEBUG (test_controller.c)control_step_threads: Creating step thread # 0
+2018-10-17 16:07:36.767 DEBUG (test_controller.c)control_step_threads: Thread # 0 for step created. Sleep for 0.
+2018-10-17 16:07:38.288 DEBUG (test_controller.c)control_step_threads: Creating step thread # 1
+2018-10-17 16:07:50.265 DEBUG (test_controller.c)control_step_threads: Thread # 1 for step created. Sleep for 0.
