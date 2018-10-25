@@ -4,6 +4,7 @@
 typedef struct {
     zlog_category_t * scenario;
     zlog_category_t * statistics;
+    zlog_category_t * transactions;
     zlog_category_t * common; 
 } zlog_categories;
 

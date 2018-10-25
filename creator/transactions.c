@@ -1,11 +1,12 @@
-#include "transactions.h"
 #include <windows.h>
+#include "transactions.h"
 #include <logger.h>
 
 
 static void save_statistics(transaction *);
 static long long get_duration(transaction *);
 static long long get_ticks_count();
+static char * convert_systime_to_date_time(SYSTEMTIME st);
 static zlog_categories * loggers;
 
 void transaction_init(){
@@ -14,10 +15,19 @@ void transaction_init(){
 
 transaction transaction_begin(char * name){
     // Получить текущее значение времени. Передать полученное значение и название транзакции в хранилище    
+    SYSTEMTIME lt;
+    GetSystemTime(&lt);
+    
+    long long ticks = get_ticks_count();
     transaction tr = {        
         .name = name,
-        .start_ticks_count = get_ticks_count()
-    };
+        .start_ticks_count = ticks,
+        .start_time = convert_systime_to_date_time(lt)
+    };   
+
+    zlog_info(loggers->common
+            , "Transaction:\"%s\" - Start time: %s"
+            , name, tr.start_time);
     return tr;
 }
 
@@ -29,6 +39,7 @@ void transaction_end(transaction * transaction, transaction_status status){
     transaction->end_ticks_count = get_ticks_count();
     transaction->status = status;
     save_statistics(transaction);
+    free(transaction->start_time);    
 }
 
 static void save_statistics(transaction * transaction){
@@ -36,13 +47,19 @@ static void save_statistics(transaction * transaction){
         zlog_error(loggers->common, "Transaction is NULL");
         return;
     }
-    char * status = transaction->status ? "SUCCESS" : "FAIL";
+    char * status = transaction->status == SUCCESS ? "SUCCESS" : "FAIL";
     long long duration = get_duration(transaction);
     zlog_debug(loggers->common
-                , "Start time: %lli. Duration: %lli. Name: %s. Status: %s"
-                , transaction->start_time_ms, duration, transaction->name, status);
-    char * format_string = "%li,%s,%lli,%s";
-    zlog_info(loggers->statistics, format_string, transaction->start_time_ms, transaction->name, duration, status);
+                , "Start time: %s. Duration: %lli. Name: %s. Status: %s"
+                , transaction->start_time, duration, transaction->name, status);
+    char * format_string = "%s,%s,%llu,%s";
+    
+    zlog_info(loggers->transactions,
+                format_string,
+                transaction->start_time,
+                transaction->name,
+                duration,
+                status);
     return;
 }
 
@@ -66,4 +83,14 @@ static long long get_ticks_count(){
     LARGE_INTEGER time;
     QueryPerformanceCounter(&time);
     return time.QuadPart;
+}
+
+static char * convert_systime_to_date_time(SYSTEMTIME st){
+    char * const date_time_format = "%02d.%02d.%d %02d:%02d:%02d.%03d";
+    char * output = (char *)malloc(strlen(date_time_format) + 1);
+    if(output == NULL){
+        zlog_error(loggers->common, "Failed to allocate memory for date_time convertion output.");
+    }
+    sprintf(output, date_time_format, st.wDay, st.wMonth, st.wYear, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+    return output;
 }

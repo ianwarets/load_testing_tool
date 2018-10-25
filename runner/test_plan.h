@@ -10,18 +10,18 @@ typedef struct {
 
 typedef struct {
     wchar_t * step_type;
-    long run_duration;
-    long threads_count;
-    long slope_duration;
+    unsigned long run_duration;
+    unsigned long threads_count;
+    unsigned long slope_duration;
 } test_step;
 
 typedef struct {
     wchar_t * name;
-    int start_delay;
+    unsigned int start_delay;
     test_step * steps;
-    int steps_count;
+    unsigned int steps_count;
     action * actions;
-    int actions_count;
+    unsigned int actions_count;
 } test_plan;
 
 runner_data * generate_runner_data(char *);

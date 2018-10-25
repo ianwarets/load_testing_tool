@@ -13,15 +13,19 @@ static void no_pacing_runner(void(*action)(), void * parameter, DWORD pace_time)
 */
 static void fixed_pacing_runner(void(*action)(), void * parameter, DWORD pace_time){
     //ULONGLONG start = GetTickCount64();
+    pace_time *= 1000;
     DWORD start = GetTickCount();
     action(parameter);
     DWORD finish = GetTickCount();
     //ULONGLONG finish = GetTickCount64();
     //ULONGLONG diff = finish - start;
     DWORD diff = finish - start;
+    if(diff >= pace_time){
+        return;
+    }
     DWORD sleep_time = pace_time - diff;
     if(sleep_time){
-        SleepEx(pace_time, TRUE);
+        SleepEx(sleep_time, TRUE);
     }
 }
 /*
@@ -36,17 +40,18 @@ static void relative_pacing_runner(void(*action)(), void * parameter, DWORD dela
     Thread routine function
 */
 static DWORD actions_wrapper(LPVOID thread_params, void(*pacing_function)()){
-    thread_data * t_data = (thread_data*)thread_params;
-    void (*init_routine)() = t_data->action->init;
-    void (*action)() = t_data->action->action;
-    void (*end_routine)() = t_data->action->end;
-
+    thread_data * thread = (thread_data*)thread_params;
+    action_data * action = thread->action;
+    void (*init_routine)() = action->init;
+    void (*action_routine)() = action->action;
+    void (*end_routine)() = action->end;
     init_routine();
     do{
-        pacing_function(action, thread_params, t_data->pacing);
+        pacing_function(action_routine, thread_params, action->pacing);        
     }
-    while(!t_data->stop_flag);    
+    while(!thread->stop_thread);    
     end_routine();
+    action->running_threads--;
     return 0;
 }
 

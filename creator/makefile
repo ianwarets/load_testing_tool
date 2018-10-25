@@ -8,7 +8,7 @@ CC=gcc
 CFLAGS=-Wall -fPIC -c
 
 ifeq ($(mode), debug)
-	CFLAGS+=-Wall -fPIC -c -g3 -O0 -DDEBUG
+	CFLAGS+=-Wall -fPIC -c -g3 -O0
 endif
 
 
@@ -22,13 +22,13 @@ LTT=..\runner
 
 INCLUDE=-I$(CURL)\include -I$(ZLOG)\head -I$(LTT) -Iinclude
 LDPATH=-L$(CURL)\lib\.libs -L$(ZLIB) -L$(OPEN_SSL)\lib -L$(BROTLI)\.libs -L$(ZLOG)\lib -L$(LTT)
-LDLIBS=-lcurl -lwldap32 -lz -lssl -lcrypto -lgdi32 -lbrotlidec -lws2_32 -lzlog -lliblogger
+LDLIBSTRANS =-lzlog -lliblogger
+LDLIBS=-lcurl -lwldap32 -lz -lssl -lcrypto -lgdi32 -lbrotlidec -lws2_32 $(LDLIBSTRANS)
 
 REFS=bin/http_requests.o bin/transactions.o
-MACROS=-DCURL_STATICLIB
 
 all: $(REFS)
-	$(CC) -Wall -shared -fPIC -Wl,-soname,libtrans.so -o bin\libtrans.dll bin/transactions.o -I$(LTT) -L$(LTT) -L$(ZLOG)\lib -lzlog -lliblogger
+	$(CC) -Wall -shared -fPIC -Wl,-soname,libtrans.so -o bin\libtrans.dll bin/transactions.o -I$(LTT) -L$(LTT) -L$(ZLOG)\lib $(LDLIBSTRANS)
 	$(CC) -Wall -shared -fPIC -Wl,-soname,libhreq.so -o bin\libhreq.dll bin/http_requests.o $(INCLUDE) $(LDPATH) $(LDLIBS) 
 
 bin/http_requests.o: http_requests.c

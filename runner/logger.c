@@ -12,17 +12,20 @@ int logger_init(){
 	zlog_category_t * zlog_scenario;
 	zlog_category_t * zlog_statistics;
 	zlog_category_t * zlog_common;
+	zlog_category_t * zlog_transactions;
 
 	int rc = zlog_init("zlog.conf");
 	if(rc){
-		fprintf(stderr, "zlog init failde\n");
+		fprintf(stderr, "zlog init failed\n");
 		return 1;
 	}
 
 	zlog_scenario = zlog_get_category("scenario");
 	zlog_statistics = zlog_get_category("statistics");
 	zlog_common = zlog_get_category("common");
-	if(!zlog_scenario || !zlog_statistics || !zlog_common){
+	zlog_transactions = zlog_get_category("transactions");
+
+	if(!zlog_scenario || !zlog_statistics || !zlog_common || !zlog_transactions){
 		if(!zlog_statistics){
 			fprintf(stderr, "Get \"statistics\" zlog category failed.\n");
 		}
@@ -32,6 +35,9 @@ int logger_init(){
 		if(!zlog_common){
 			fprintf(stderr, "Get \"common\" zlog category failed.\n");
 		}
+		if(!zlog_transactions){
+			fprintf(stderr, "Get \"transactions\" zlog category failed.\n");
+		}
 		zlog_fini();
 		return 1;
 	}
@@ -39,6 +45,7 @@ int logger_init(){
 	loggers->common = zlog_common;
 	loggers->scenario = zlog_scenario;
 	loggers->statistics = zlog_statistics;
+	loggers->transactions = zlog_transactions;
 	return 0;
 }
 

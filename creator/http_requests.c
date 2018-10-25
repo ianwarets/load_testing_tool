@@ -7,36 +7,62 @@
 
 static long http_request(char *, char*, struct curl_slist *, response_data_struct *);
 static size_t save_response_data(void*, size_t, size_t, void *);
-static void save_request_statistics();
-static CURL * hCurl;
+static void save_request_statistics(char * name);
+static long make_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data);
+
 static zlog_categories * loggers;
+__thread CURL * hCurl;
 
 int init_http_requests(){
-	loggers = logger_get_loggers();
+	if(loggers == NULL){
+		loggers = logger_get_loggers();
+	}
 	hCurl = curl_easy_init();
 	if(hCurl == NULL){
 		zlog_fatal(loggers->scenario, "Failed to create CURL handler.");
 		return -1;
 	}
+
+	// Установка удержания соединения.
+	curl_easy_setopt(hCurl, CURLOPT_TCP_KEEPALIVE, 1L);
+	
+	// Установка периода бездействия удержания 120 с.
+	curl_easy_setopt(hCurl, CURLOPT_TCP_KEEPIDLE, 120L);
+	
+	// Установка периода проверки соединения 60 с.
+	curl_easy_setopt(hCurl, CURLOPT_TCP_KEEPINTVL, 60L);
+	
 	return 0;
 }
 
-void http_request_cleanup(){
+void http_requests_cleanup(CURL * hCurl){
 	curl_easy_cleanup(hCurl);
 }
 
-long get_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){		
+long get_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){	
 	zlog_info(loggers->scenario, "get_request");
-	zlog_debug(loggers->scenario, "URL:%s, curl_slist has value:%c, response_data_struct has value:%c", url, ((headers == NULL) ? 'n' : 'y'), ((response_data == NULL) ? 'n' : 'y'));
 	curl_easy_setopt(hCurl, CURLOPT_HTTPGET, 1L);
-	return http_request(name, url, headers, response_data);	
+	return make_request(name, url, headers, response_data);
+	
 }
 
-long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){
+long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data, char * post_data, long post_data_size){
 	zlog_info(loggers->scenario, "post_request");
-	zlog_debug(loggers->scenario, "URL:%s, curl_slist has value:%c, response_data_struct has value:%c", url, (headers == NULL) ? 'n' : 'y', (response_data == NULL) ? 'n' : 'y');
-	curl_easy_setopt(hCurl, CURLOPT_HTTPPOST, 1L);
-	return http_request(name, url, headers, response_data);
+	if(curl_easy_setopt(hCurl, CURLOPT_POSTFIELDS, post_data) != CURLE_OK){
+		zlog_error(loggers->scenario, "Failed to set POST body value");
+		return -1;
+	}
+	if(curl_easy_setopt(hCurl, CURLOPT_POSTFIELDSIZE, post_data_size) != CURLE_OK){
+		zlog_error(loggers->scenario, "Failed to set POST field size property");
+		return -1;
+	}
+	return make_request(name, url, headers, response_data);
+}
+
+static long make_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){	
+	zlog_debug(loggers->scenario, "URL: \"%s\", curl_slist has value: %c, response_data_struct has value: %c", url, (headers == NULL) ? 'n' : 'y', (response_data == NULL) ? 'n' : 'y');
+	long result =  http_request(name, url, headers, response_data);	
+	return result;
 }
 
 /**
@@ -110,6 +136,7 @@ static void save_request_statistics(char * name){
 			received_bytes + header_size,
 			upload_speed,
 			download_speed);
+	free(time);
 }
 
 
@@ -126,7 +153,7 @@ static long http_request(char * name, char * url, struct curl_slist * headers, r
 			return -1;
 	}
 
-	char * user_agent = "libcurl";
+	char * user_agent = "Малыш. Инструмент генерации нагрузки.";
 	char * cert_file_name = "cacert.pem";
 	#ifdef DEBUG
 		curl_easy_setopt(hCurl, CURLOPT_VERBOSE, 1L);
@@ -207,14 +234,10 @@ static size_t save_response_data(void* buffer, size_t size, size_t nmemb, void *
 	size_t current_size = ((response_data_struct*)userp)->size;
 	
 	void ** response = &(((response_data_struct*)userp)->data);
-	if(*response == NULL){
-		zlog_info(loggers->scenario, "Allocating memory for userp->data.");
-		*response = malloc(result + current_size);
-	}
-	else{
-		zlog_info(loggers->scenario, "Reallocating memory for userp->data.");
-		*response = realloc(*response, result + current_size);	
-	}
+	
+	zlog_info(loggers->scenario, "Allocating/Reallocating memory for userp->data.");
+	*response = realloc(*response, result + current_size);	
+	
 	if(response == NULL){
 		zlog_error(loggers->scenario, "Memory allocation/reallocation failed.");
 		return 0;

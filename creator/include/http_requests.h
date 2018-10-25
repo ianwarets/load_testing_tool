@@ -12,8 +12,16 @@ typedef struct {
  * @return - 0 в случае успеха, 1 в случае неудачной инициализации.
  */
 int init_http_requests();
-void http_request_cleanup();
 
+/**
+ * Очистка ресурсов curl
+ */
+void http_requests_cleanup();
+
+/**
+ * Получение объекта для работы с запросами.
+ */
+CURL * http_request_get_handler();
 
 /**
  *	Выполнение GET запроса.
@@ -26,7 +34,6 @@ void http_request_cleanup();
  */
 long get_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data);
 
-
 /**
  *	Выполнение POST запроса.
  *	@param name - имя запроса.
@@ -35,8 +42,7 @@ long get_request(char * name, char * url, struct curl_slist * headers, response_
  * 	@param response_data - указатель на структуру предназначенную для сохранения полученного в результате запроса ответа. 
  *	@return код ответа
  */
-long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data);
-
+long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data, char * post_data, long post_data_size);
 
 /**
  *	Получить значение заголовка Location 

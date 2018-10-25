@@ -4,9 +4,9 @@ typedef enum{
 } transaction_status;
 
 typedef struct{   
-    long long start_time_ms; 
-    long long start_ticks_count;
-    long long end_ticks_count;
+    char * start_time; 
+    unsigned long long start_ticks_count;
+    unsigned long long end_ticks_count;
     char * name;
     transaction_status status;
 } transaction;

@@ -9,6 +9,8 @@ static int create_test_plan_from_json(char *, test_plan *);
 static LPTHREAD_START_ROUTINE define_pacing_function(wchar_t *);
 static int save_json_string(char *, UJObject , wchar_t **);
 static int get_function_references(action_data *, wchar_t *);
+static int generate_actions_data(runner_data * r_data, test_plan t_plan);
+static wchar_t * get_action_name(wchar_t * action_file_name);
 
 static char * read_test_plan(char * test_plan_name){
     zlog_info(loggers->common, "Opening test plan data file.");
@@ -58,10 +60,19 @@ runner_data * generate_runner_data(char * test_plan_name){
         return NULL;
     }
     runner_data * r_data = (runner_data*)malloc(sizeof(runner_data));
+
     if(r_data == NULL){
         zlog_error(loggers->common, "Failed to allocate memory for runner_data structure.");
         return NULL;
     }
+
+    r_data->actions = NULL;
+    r_data->actions_count = 0;
+    r_data->total_threads_count = 0;
+    r_data->start_delay = 0;
+    r_data->steps = NULL;
+    r_data->steps_count = 0;    
+
     r_data->steps_count = t_plan.steps_count;
     if(t_plan.steps_count < 2){
         zlog_error(loggers->common, "Minimal number of steps should be not less then 2. The actual size is: %i.", t_plan.steps_count);
@@ -74,56 +85,32 @@ runner_data * generate_runner_data(char * test_plan_name){
         zlog_error(loggers->common, "Failed to allocate memory for runner_data.steps.");
         free_runner_data(r_data);
         return NULL;
-    }
-
-    int actions_count = t_plan.actions_count;
-    if(actions_count == 0){
-        zlog_error(loggers->common, "Test plan actions count is 0.");
-        free_runner_data(r_data);
-        return NULL;
-    }
-    action_data * actions = (action_data*)malloc(sizeof(action_data) * actions_count);
-    if(actions == NULL){
-        zlog_error(loggers->common, "Failed to allocate memory for action_data array.");
-        free_runner_data(r_data);
-        return NULL;
-    }
-    for(int i = 0; i < actions_count; i++){
-        if(get_function_references(&actions[i], t_plan.actions[i].action_file_name)){
-            free_runner_data(r_data);
-            return NULL;
-        }
-    }
-
+    }    
+    
     for(int i = 0; i < t_plan.steps_count; i++){
-        r_data->steps[i].next_step_time_interval = t_plan.steps[i].run_duration;
+        r_data->steps[i].duration = t_plan.steps[i].run_duration;
         r_data->steps[i].slope_delay = t_plan.steps[i].slope_duration;
         r_data->steps[i].threads_count = t_plan.steps[i].threads_count;
         // In case step type is equal to "start" then step will start threads, else in will be considered as stop threads step
         r_data->steps[i].to_start = wcscmp(t_plan.steps[i].step_type, L"start") == 0 ? TRUE : FALSE;
-        zlog_debug(loggers->common, "Step #%i: Next step time interval: %li, Slope delay: %li, Threads count: %li.",
+        if(r_data->steps[i].to_start){
+            r_data->total_threads_count += r_data->steps[i].threads_count;
+        }
+        r_data->steps[i].r_data = r_data;
+        r_data->steps[i].step_index = i;
+        zlog_debug(loggers->common, "Step #%i: %s, Next step time interval: %li, Slope delay: %li, Threads count: %li.",
                 i,
-                r_data->steps[i].next_step_time_interval,
+                r_data->steps[i].to_start ? "Start" : "Stop",
+                r_data->steps[i].duration,
                 r_data->steps[i].slope_delay,
                 r_data->steps[i].threads_count );
-        r_data->steps[i].threads_array = (thread_data*)malloc(sizeof(thread_data) * t_plan.steps[i].threads_count);
-        if(r_data->steps[i].threads_array == NULL){
-            zlog_error(loggers->common, "Failed to allocate memory for threads_array.");
-            free_runner_data(r_data);
-            return NULL;
-        }
-        for(int n = 0; n < r_data->steps[i].threads_count; n++){
-            for(int m = 0; m < actions_count; m++){
-                thread_data * td = &(r_data->steps[i].threads_array[n]);
-                action * act = &t_plan.actions[m];
-                td->pacing = act->pacing;
-                td->action = &actions[m];
-                td->action->run_action_function = define_pacing_function(act->pacing_type);
-                td->stop_flag = 0;
-                td->thread = NULL;
-            }
-        }
-    }    
+    }   
+
+    if(generate_actions_data(r_data, t_plan) != 0){
+        free_runner_data(r_data);
+        return NULL;
+    }
+       
     return r_data;
 }
 
@@ -131,28 +118,23 @@ void free_runner_data(runner_data * run_data){
     zlog_info(loggers->common, "Freing runner data.");
     if(run_data == NULL){
         return;
-    }
-    if(run_data->steps == NULL){
+    }    
+    if(run_data->actions == NULL){
         return;
     }
-    for(long i = 0; i < run_data->steps_count; i++){
-        step_data s_data = run_data->steps[i];
-        thread_data * threads_array = s_data.threads_array;
+    for(long i = 0; i < run_data->actions_count; i++){
+        action_data action = run_data->actions[i];
+        zlog_info(loggers->common, "Freing scenario library.");
+        FreeLibrary(action.action_lib_handler);
+        action.action = NULL;
+        action.init = NULL;
+        action.end = NULL;
+
+        zlog_info(loggers->common, "Freing threads_array memory.");
+        thread_data * threads_array = action.threads;
         if(threads_array == NULL){
             continue;
         }
-        for(long n = 0; n < s_data.threads_count; n++){
-            action_data * action = s_data.threads_array[n].action;
-            if(action == NULL){
-                continue;
-            }
-            zlog_info(loggers->common, "Freing scenario library.");
-            FreeLibrary(action->library_handler);
-            action->action = NULL;
-            action->init = NULL;
-            action->end = NULL;
-        }
-        zlog_info(loggers->common, "Freing threads_array memory.");
         free(threads_array);
     }
     zlog_info(loggers->common, "Freing run_data->steps memory.");
@@ -305,8 +287,8 @@ static int get_function_references(action_data * p_action, wchar_t * file_name){
     }
     f_name[fname_len] = '\0';
 
-    p_action->library_handler = LoadLibrary(f_name);
-    if(p_action->library_handler == NULL){        
+    p_action->action_lib_handler = LoadLibrary(f_name);
+    if(p_action->action_lib_handler == NULL){        
         LPSTR messageBuffer = NULL;
         FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                                  NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
@@ -314,35 +296,35 @@ static int get_function_references(action_data * p_action, wchar_t * file_name){
         LocalFree(messageBuffer);
         return 1;
     }
-    p_action->action = (void*)GetProcAddress(p_action->library_handler, "action");
+    p_action->action = (void*)GetProcAddress(p_action->action_lib_handler, "action");
     if(p_action->action == NULL){        
         zlog_error(loggers->common, "Failde to get \"action\" method from file: %s.", f_name);
-        FreeLibrary(p_action->library_handler);
+        FreeLibrary(p_action->action_lib_handler);
         return 1;
     }
-    p_action->init = (void*)GetProcAddress(p_action->library_handler, "init");
+    p_action->init = (void*)GetProcAddress(p_action->action_lib_handler, "init");
     if(p_action->init == NULL){        
         zlog_error(loggers->common, "Failde to get \"init\" method from file: %s.", f_name);
-        FreeLibrary(p_action->library_handler);
+        FreeLibrary(p_action->action_lib_handler);
         return 1;
     }
-    p_action->end = (void*)GetProcAddress(p_action->library_handler, "end");
+    p_action->end = (void*)GetProcAddress(p_action->action_lib_handler, "end");
     if(p_action->end == NULL){        
         zlog_error(loggers->common, "Failde to get \"end\" method from file: %s.", f_name);
-        FreeLibrary(p_action->library_handler);
+        FreeLibrary(p_action->action_lib_handler);
         return 1;
     }
     return 0;
 }
 
 static LPTHREAD_START_ROUTINE define_pacing_function(wchar_t * pacing_type){
-    if(wcscmp(pacing_type, L"no")){
+    if(wcscmp(pacing_type, L"no") == 0){
         return no_pacing;
     }
-    if(wcscmp(pacing_type, L"fixed")){
+    if(wcscmp(pacing_type, L"fixed") == 0){
         return fixed_pacing;
     }
-    if(wcscmp(pacing_type, L"relative")){
+    if(wcscmp(pacing_type, L"relative") == 0){
         return relative_pacing;
     }
     zlog_error(loggers->common, "Specified pacing type \"%ws\"is not recognized. It should be :\"no\", \"fixed\", \"relative\".", pacing_type);
@@ -364,4 +346,64 @@ static int save_json_string(char * variable_name, UJObject ujobject, wchar_t ** 
     }
     wcscpy(*output_string, step_type);
     return 0;
+}
+
+static int generate_actions_data(runner_data * r_data, test_plan t_plan){
+    int actions_count = t_plan.actions_count;
+    r_data->actions_count = actions_count;
+    if(actions_count == 0){
+        zlog_error(loggers->common, "Test plan actions count is 0.");        
+        return 1;
+    }
+    action_data * actions = (action_data*)malloc(sizeof(action_data) * actions_count);
+    if(actions == NULL){
+        zlog_error(loggers->common, "Failed to allocate memory for action_data array.");
+        return 1;
+    }
+    r_data->actions = actions;
+    for(int i = 0; i < actions_count; i++){
+        if(get_function_references(&actions[i], t_plan.actions[i].action_file_name)){
+            return 1;
+        }
+        actions[i].ratio = t_plan.actions[i].percentage;
+        actions[i].runner = define_pacing_function(t_plan.actions[i].pacing_type);
+        if(actions[i].runner == NULL){
+            zlog_error(loggers->common, "Failed to detect pacing type.");
+            return 1;
+        }
+        actions[i].pacing = t_plan.actions[i].pacing;
+
+        unsigned int th_count = (r_data->total_threads_count * actions[i].ratio) / 100;
+        if(th_count < 1){
+            th_count = 1;
+        }
+        actions[i].threads_count = th_count;     
+        actions[i].threads = (thread_data *)malloc(sizeof(thread_data) * th_count);
+        if(actions[i].threads == NULL){
+            zlog_error(loggers->common, "Failed to allocate memory for threads array for action # %i", i);
+            return 1;
+        }
+        for(int t = 0; t < th_count; t++){
+            actions[i].threads[t].handle = NULL;
+            actions[i].threads[t].action = NULL;
+            actions[i].threads[t].index = 0;
+            actions[i].threads[t].stop_thread = 0;
+            
+        }
+        actions[i].running_threads = 0;  
+        actions[i].runner = define_pacing_function(t_plan.actions[i].pacing_type);
+        if(get_function_references(&actions[i], t_plan.actions[i].action_file_name) != 0){
+            return 1;
+        }
+        actions[i].name = get_action_name(t_plan.actions[i].action_file_name);
+    }
+    return 0;
+}
+
+static wchar_t * get_action_name(wchar_t * action_file_name){
+    wchar_t * result = wcsrchr(action_file_name, L'/');
+    if(result == NULL){
+        return action_file_name;
+    }
+    return ++result;
 }

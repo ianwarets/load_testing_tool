@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <wchar.h>
 #include "logger.h"
 
 //#pragma once
@@ -10,36 +11,49 @@ enum thread_errors {
     ERR_CANCEL_TIMER
 };
 
-typedef struct{
-    void(*init)();
-    void(*end)();
-    void(*action)();
-    HMODULE library_handler;
-    LPTHREAD_START_ROUTINE run_action_function;
-} action_data;
+typedef struct action action_data;
 
-typedef struct{
-    HANDLE thread;
-    _Atomic int stop_flag;
-    action_data * action;    
-    DWORD pacing;
-} thread_data;
+typedef struct thread{
+	_Atomic int stop_thread;	
+	unsigned int index;
+	void * handle;
+	action_data * action;
+}thread_data;
 
-typedef struct {
-    long next_step_time_interval;
-    int threads_count;
-    thread_data * threads_array;    
-    void * param;
-    BOOL to_start; //run or stop threads
-    long slope_delay; // used for slope providing
+struct action{
+	thread_data * threads;
+	unsigned int threads_count;
+	_Atomic unsigned int running_threads;
+	void(*init)();
+	void(*action)();
+	void(*end)();
+	wchar_t * name;
+	HMODULE action_lib_handler;
+	LPTHREAD_START_ROUTINE runner;
+    unsigned long pacing;
+    unsigned int ratio;
+};
+
+typedef struct runner runner_data;
+
+typedef struct step{
+	unsigned int step_index;
+	//indicate step type: run or stop  threads
+	int to_start;
+    unsigned long duration;
+	unsigned long slope_delay;
+    unsigned long threads_count;
+	runner_data * r_data;
 }step_data;
 
-typedef struct {
-    step_data * steps;
-    long steps_count;
-    long start_delay;
-    zlog_categories * loggers;
-} runner_data;
+struct runner{
+	unsigned int steps_count;
+	step_data * steps;
+    unsigned long start_delay;	
+    unsigned long total_threads_count;
+    action_data * actions;
+	unsigned int actions_count;
+};
 
 /**
  *  Запуск ступеней теста по таймеру. 
