@@ -1,5 +1,7 @@
 #include "action_wrappers.h"
 #include "test_controller.h"
+#include <signal.h>
+
 
 /*
     Выполнение действия без интервала, следующая интерация запускается сразу.
@@ -36,11 +38,21 @@ static void relative_pacing_runner(void(*action)(), void * parameter, DWORD dela
     SleepEx(delay_time, TRUE);
 }
 
+__thread _Atomic int e_signal_flag = 0;
+static void sig_handler(int sig){
+    e_signal_flag = 1;
+}
+
 /*
     Thread routine function
 */
-static DWORD actions_wrapper(LPVOID thread_params, void(*pacing_function)()){    
+static DWORD actions_wrapper(LPVOID thread_params, void(*pacing_function)()){   
     thread_data * thread = (thread_data*)thread_params;
+    if(signal(SIGSEGV, sig_handler) == SIG_ERR){
+        printf("Failed to set signal handler for action %ls, thread # %i\n",thread->action->name , thread->index);
+        return EXIT_FAILURE;
+    }
+    
     action_data * action = thread->action;
     void (*init_routine)() = action->init;
     void (*action_routine)() = action->action;
@@ -49,12 +61,19 @@ static DWORD actions_wrapper(LPVOID thread_params, void(*pacing_function)()){
     action->running_threads++;
     init_routine();
     do{
-        pacing_function(action_routine, thread_params, action->pacing);        
+        if(e_signal_flag){
+            error_message(L"Error occured in thread # %i\n", thread->index);
+            break;
+        }
+        pacing_function(action_routine, thread_params, action->pacing);   
+        if(GetCurrentThreadId() % 2 == 0){
+            //raise(SIGSEGV);    
+        }
     }
     while(!thread->stop_thread);    
     end_routine();
     action->running_threads--;
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 DWORD WINAPI no_pacing(LPVOID thread_params){

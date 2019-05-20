@@ -3,8 +3,6 @@
 #include "logger.h"
 #include "action_wrappers.h"
 
-extern zlog_categories * loggers;
-
 static int create_test_plan_from_json(char *, test_plan *);
 static LPTHREAD_START_ROUTINE define_pacing_function(wchar_t *);
 static int save_json_string(char *, UJObject , wchar_t **);
@@ -15,32 +13,32 @@ static wchar_t * get_action_name(wchar_t * action_file_name);
 static char * read_test_plan(char * test_plan_name){
     FILE * f_test_plan = fopen(test_plan_name, "r");
     if(f_test_plan == NULL){
-        zlog_error(loggers->common, "Failed to open test plan file.");
+        error_message(L"Failed to open test plan file.");
         return NULL;
     }
     if(fseek(f_test_plan, 0, SEEK_END)){        
-        zlog_error(loggers->common, "fseek failed to move to the end of file.");
+        error_message(L"fseek failed to move to the end of file.");
         return NULL;
     }
     long f_size = ftell(f_test_plan);
 #ifdef DEBUG
-    zlog_debug(loggers->common, "Test plan file size is : %li", f_size);    
+    debug_message(L"Test plan file size is : %li", f_size);    
 #endif
     rewind(f_test_plan);  
     char * file_data = (char *)malloc(sizeof(char) * (f_size + 1));
     if(file_data == NULL){        
-        zlog_error(loggers->common, "Failed to allocate memory for file.");
+        error_message(L"Failed to allocate memory for file.");
         return NULL;
     }  
     size_t fread_result = fread(file_data, 1, f_size, f_test_plan);
     if(fread_result != f_size && feof(f_test_plan) == 0 && ferror(f_test_plan) > 0){        
-        zlog_error(loggers->common, "Failed to read configuration file data.");
+        error_message(L"Failed to read configuration file data.");
         free(file_data);
         return NULL;
     }    
     file_data[fread_result] = '\0';
     if(fclose(f_test_plan) == EOF){
-        zlog_error(loggers->common, "Failed to close test plan file.");
+        error_message(L"Failed to close test plan file.");
     }
     return file_data;
 }
@@ -50,7 +48,7 @@ runner_data * generate_runner_data(char * test_plan_name){
     if(test_plan_file_data == NULL){
         return NULL;
     }
-    test_plan t_plan;
+    test_plan t_plan = {};
     int result = create_test_plan_from_json(test_plan_file_data, &t_plan);
     free(test_plan_file_data);
     if(result){
@@ -59,7 +57,7 @@ runner_data * generate_runner_data(char * test_plan_name){
     runner_data * r_data = (runner_data*)malloc(sizeof(runner_data));
 
     if(r_data == NULL){
-        zlog_error(loggers->common, "Failed to allocate memory for runner_data structure.");
+        error_message(L"Failed to allocate memory for runner_data structure.");
         return NULL;
     }
 
@@ -72,14 +70,14 @@ runner_data * generate_runner_data(char * test_plan_name){
 
     r_data->steps_count = t_plan.steps_count;
     if(t_plan.steps_count < 2){
-        zlog_error(loggers->common, "Minimal number of steps should be not less then 2. The actual size is: %i.", t_plan.steps_count);
+        error_message(L"Minimal number of steps should be not less then 2. The actual size is: %i.", t_plan.steps_count);
         return NULL;
         //TODO: add stop step or run until completion - one iteration
     }
     r_data->start_delay = t_plan.start_delay;
     r_data->steps = (step_data*)malloc(sizeof(step_data) * t_plan.steps_count);
     if(r_data->steps == NULL){
-        zlog_error(loggers->common, "Failed to allocate memory for runner_data.steps.");
+        error_message(L"Failed to allocate memory for runner_data.steps.");
         free_runner_data(r_data);
         return NULL;
     }    
@@ -96,7 +94,7 @@ runner_data * generate_runner_data(char * test_plan_name){
         r_data->steps[i].r_data = r_data;
         r_data->steps[i].step_index = i;
 #ifdef DEBUG
-        zlog_debug(loggers->common, "Step #%i: %s, Next step time interval: %li, Slope delay: %li, Threads count: %li.",
+        debug_message(L"Step #%i: %s, Next step time interval: %li, Slope delay: %li, Threads count: %li.",
                 i,
                 r_data->steps[i].to_start ? "Start" : "Stop",
                 r_data->steps[i].duration,
@@ -141,7 +139,7 @@ static int create_test_plan_from_json(char * json_string, test_plan * t_plan){
     int objects_count;
     UJObject obj =  UJDecode(json_string, strlen(json_string), NULL, &state);
     if(obj == NULL){
-        zlog_error(loggers->common, "Failed to parse test plan file.\n\t%s.", UJGetError(state));
+        error_message(L"Failed to parse test plan file.\n\t%s.", UJGetError(state));
         return 1;
     }
     const wchar_t * tree_keys[] = { L"test_name", L"start_delay", L"actions", L"steps"};
@@ -152,7 +150,7 @@ static int create_test_plan_from_json(char * json_string, test_plan * t_plan){
 
     objects_count = 4;
     if(UJObjectUnpack(obj, objects_count, "SNAA", tree_keys, &o_test_name, &o_start_delay, &o_actions, &o_steps) != objects_count){
-        zlog_error(loggers->common, "Failed to unpack JSON object.");
+        error_message(L"Failed to unpack JSON object.");
         UJFree(state);
         return 1;
     }
@@ -166,7 +164,7 @@ static int create_test_plan_from_json(char * json_string, test_plan * t_plan){
        
     void * iterator = UJBeginArray(o_actions);
     if(iterator == NULL){
-        zlog_error(loggers->common, "Failed to create JSON array iterator.");
+        error_message(L"Failed to create JSON array iterator.");
         UJFree(state);
         return 1;
     }
@@ -184,12 +182,12 @@ static int create_test_plan_from_json(char * json_string, test_plan * t_plan){
         (*t_plan).actions_count = i + 1;
         (*t_plan).actions = (action*)realloc((*t_plan).actions, sizeof(action) * (*t_plan).actions_count);
         if((*t_plan).actions == NULL){    
-            zlog_error(loggers->common, "Actions realloc failed.");
+            error_message(L"Actions realloc failed.");
             UJFree(state);
             return 1;
         }  
         if(UJObjectUnpack(o_action, objects_count, "SNSN", action_keys, &o_act_file_name, &o_pacing, &o_pacing_type, &o_percentage) != objects_count){    
-            zlog_error(loggers->common, "Failed to unpack JSON action object.");
+            error_message(L"Failed to unpack JSON action object.");
             return 1;            
         }
 
@@ -211,7 +209,7 @@ static int create_test_plan_from_json(char * json_string, test_plan * t_plan){
 
     iterator = UJBeginArray(o_steps);
     if(iterator == NULL){        
-        zlog_error(loggers->common, "Failed to get steps array iterator.");
+        error_message(L"Failed to get steps array iterator.");
         UJFree(state);
         return 1;
     }
@@ -230,11 +228,12 @@ static int create_test_plan_from_json(char * json_string, test_plan * t_plan){
         (*t_plan).steps_count = i + 1;
         (*t_plan).steps = (test_step*)realloc((*t_plan).steps, sizeof(test_step) * (*t_plan).steps_count);
         if((*t_plan).steps == NULL){            
-            zlog_error(loggers->common, "Steps realloc failed");
+            error_message(L"Steps realloc failed");
             UJFree(state);
             return 1;
         }
-        if(UJObjectUnpack(o_step, objects_count, "SNNN", step_keys, &o_step_type, &o_step_run_duration, &o_step_threads_count, &o_step_slope_duration) != objects_count){            zlog_error(loggers->common, "Failed to unpack JSON step object");
+        if(UJObjectUnpack(o_step, objects_count, "SNNN", step_keys, &o_step_type, &o_step_run_duration, &o_step_threads_count, &o_step_slope_duration) != objects_count){            
+            error_message(L"Failed to unpack JSON step object");
             UJFree(state);
             return 1;
         }
@@ -270,25 +269,25 @@ static int get_function_references(action_data * p_action, wchar_t * file_name){
         LPSTR messageBuffer = NULL;
         FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                                  NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
-        zlog_error(loggers->common, "Failed to load file %s. [%s].", f_name, messageBuffer);
+        error_message(L"Failed to load file %s. [%s].", f_name, messageBuffer);
         LocalFree(messageBuffer);
         return 1;
     }
     p_action->action = (void*)GetProcAddress(p_action->action_lib_handler, "action");
     if(p_action->action == NULL){        
-        zlog_error(loggers->common, "Failed to get \"action\" method from file: %s.", f_name);
+        error_message(L"Failed to get \"action\" method from file: %s.", f_name);
         FreeLibrary(p_action->action_lib_handler);
         return 1;
     }
     p_action->init = (void*)GetProcAddress(p_action->action_lib_handler, "init");
     if(p_action->init == NULL){        
-        zlog_error(loggers->common, "Failed to get \"init\" method from file: %s.", f_name);
+        error_message(L"Failed to get \"init\" method from file: %s.", f_name);
         FreeLibrary(p_action->action_lib_handler);
         return 1;
     }
     p_action->end = (void*)GetProcAddress(p_action->action_lib_handler, "end");
     if(p_action->end == NULL){        
-        zlog_error(loggers->common, "Failed to get \"end\" method from file: %s.", f_name);
+        error_message(L"Failed to get \"end\" method from file: %s.", f_name);
         FreeLibrary(p_action->action_lib_handler);
         return 1;
     }
@@ -305,7 +304,7 @@ static LPTHREAD_START_ROUTINE define_pacing_function(wchar_t * pacing_type){
     if(wcscmp(pacing_type, L"relative") == 0){
         return relative_pacing;
     }
-    zlog_error(loggers->common, "Specified pacing type \"%ws\"is not recognized. It should be :\"no\", \"fixed\", \"relative\".", pacing_type);
+    error_message(L"Specified pacing type \"%ws\"is not recognized. It should be :\"no\", \"fixed\", \"relative\".", pacing_type);
     return NULL;
 }
 
@@ -313,12 +312,12 @@ static int save_json_string(char * variable_name, UJObject ujobject, wchar_t ** 
     size_t size = 0;
     const wchar_t * step_type = UJReadString(ujobject, &size);
     if(size == 0){
-        zlog_error(loggers->common, "Failed to read string for %s.", variable_name);
+        error_message(L"Failed to read string for %s.", variable_name);
         return 1;
     }
     *output_string = (wchar_t*)malloc(sizeof(wchar_t) * (size + 1));
     if(*output_string == NULL){
-        zlog_error(loggers->common, "Failed to allocate memory for %s.", variable_name);
+        error_message(L"Failed to allocate memory for %s.", variable_name);
         return 1;
     }
     wcscpy(*output_string, step_type);
@@ -329,12 +328,12 @@ static int generate_actions_data(runner_data * r_data, test_plan t_plan){
     int actions_count = t_plan.actions_count;
     r_data->actions_count = actions_count;
     if(actions_count == 0){
-        zlog_error(loggers->common, "Test plan actions count is 0.");        
+        error_message(L"Test plan actions count is 0.");        
         return 1;
     }
     action_data * actions = (action_data*)malloc(sizeof(action_data) * actions_count);
     if(actions == NULL){
-        zlog_error(loggers->common, "Failed to allocate memory for action_data array.");
+        error_message(L"Failed to allocate memory for action_data array.");
         return 1;
     }
     r_data->actions = actions;
@@ -345,7 +344,7 @@ static int generate_actions_data(runner_data * r_data, test_plan t_plan){
         actions[i].ratio = t_plan.actions[i].percentage;
         actions[i].runner = define_pacing_function(t_plan.actions[i].pacing_type);
         if(actions[i].runner == NULL){
-            zlog_error(loggers->common, "Failed to detect pacing type.");
+            error_message(L"Failed to detect pacing type.");
             return 1;
         }
         actions[i].pacing = t_plan.actions[i].pacing;
@@ -357,7 +356,7 @@ static int generate_actions_data(runner_data * r_data, test_plan t_plan){
         actions[i].threads_count = th_count;     
         actions[i].threads = (thread_data *)malloc(sizeof(thread_data) * th_count);
         if(actions[i].threads == NULL){
-            zlog_error(loggers->common, "Failed to allocate memory for threads array for action # %i", i);
+            error_message(L"Failed to allocate memory for threads array for action # %i", i);
             return 1;
         }
         for(int t = 0; t < th_count; t++){

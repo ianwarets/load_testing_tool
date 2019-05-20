@@ -1,28 +1,13 @@
-#include <zlog.h>
+#include <wchar.h>
 
-#pragma once
-typedef struct {
-    zlog_category_t * scenario;
-    zlog_category_t * statistics;
-    zlog_category_t * transactions;
-    zlog_category_t * common; 
-} zlog_categories;
+extern unsigned int init_failed;
 
-/**
- * Выполняет инициализацию библиотеки журналирования.
- * Вызывать в основном потоке один раз.
- * Не многопоточная функция
- */
-int logger_init();
+void debug_message(const wchar_t * text, ...);
 
-/**
- * Получение структуры с журналировщиками.
- * @return структура с жарналировщиками для всего приложения.
- */
-zlog_categories * logger_get_loggers();
+void info_message(const wchar_t * text, ...);
 
-/**
- * Завершает работу библиотеки журналирования.
- * Вызывать в основном потоке.
- */
-void logger_close();
+void warning_message(const wchar_t * text, ...);
+
+void error_message(const wchar_t * text, ...);
+
+void fatal_message(const wchar_t * text, ...);

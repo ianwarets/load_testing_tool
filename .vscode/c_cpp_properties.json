@@ -1,21 +1,20 @@
 {
-    "env": {
-        
-    },
+    "env": {},
     "configurations": [
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}\\**",
-                "C:\\Programming\\C\\libraries\\**"            
+                "${workspaceFolder}/**",
+                "C:/Programming/C/libraries/**",
+                "C:/Programming/C/libs/libP7Client_v5.1/Headers"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
-            ],
-            "compileCommands": "",
-            "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
+            ],            
+            "compileCommands": "compile_commands.json",
+            "compilerPath": "C:/MinGW/bin/gcc.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "clang-x64"

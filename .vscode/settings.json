@@ -18,6 +18,13 @@
         "http_requests.h": "c",
         "unordered_map": "c",
         "zlog.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "logger.h": "c"
+    },
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
     }
 }

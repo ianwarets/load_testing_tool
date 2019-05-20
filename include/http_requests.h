@@ -48,3 +48,4 @@ long post_request(char * name, char * url, struct curl_slist * headers, response
  *	Получить значение заголовка Location 
  */
 char * get_redirect_link();
+
