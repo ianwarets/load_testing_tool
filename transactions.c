@@ -2,6 +2,7 @@
 #include "transactions.h"
 #include <logger.h>
 #include <stdio.h>
+#include <string.h>
 
 
 static void save_statistics(transaction *);
@@ -9,7 +10,7 @@ static long long get_duration(transaction *);
 static long long get_ticks_count();
 static char * convert_systime_to_date_time(SYSTEMTIME st);
 
-transaction transaction_begin(char * name){
+EXPORT transaction transaction_begin(char * name){
     // Получить текущее значение времени. Передать полученное значение и название транзакции в хранилище    
     SYSTEMTIME lt;
     GetSystemTime(&lt);
@@ -25,7 +26,7 @@ transaction transaction_begin(char * name){
     return tr;
 }
 
-void transaction_end(transaction * transaction, transaction_status status){
+EXPORT void transaction_end(transaction * transaction, transaction_status status){
     if(transaction == NULL){
         error_message(L"Transaction is NULL");
         return;
@@ -79,10 +80,15 @@ static long long get_ticks_count(){
 
 static char * convert_systime_to_date_time(SYSTEMTIME st){
     char * const date_time_format = "%02d.%02d.%d %02d:%02d:%02d.%03d";
-    char * output = (char *)malloc(strlen(date_time_format) + 1);
+    const size_t buff_size = strlen(date_time_format) + 1;
+    char * output = (char *)malloc(buff_size);
     if(output == NULL){
         error_message(L"Failed to allocate memory for date_time convertion output.");
     }
-    sprintf(output, date_time_format, st.wDay, st.wMonth, st.wYear, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+#ifdef _WINDOWS
+    sprintf_s(output, buff_size, date_time_format, st.wDay, st.wMonth, st.wYear, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+#else
+    sprintf(output, date_time_format, st.wDay, st.wMonth, st.wYear, st.wHour. st.wMinute, st.wSecond, st.wMilliseconds);
+#endif
     return output;
 }

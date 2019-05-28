@@ -4,3 +4,6 @@
 *.a
 *.log
 /bin/*.json
+*.obj
+*.pdb
+*.vscode/ipch

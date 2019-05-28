@@ -1,15 +1,20 @@
 # web request
 # MAKEFILE
 
-CC=gcc
-CFLAGS=-Wall
+CC=cl
+CFLAGS=--TC -Wall
 CFLAGSDLL=-Wall -fPIC -c
+
+LINKER=link
+LFLAGS=
+LFLAGSDLL=
+
 ifeq ($(mode), debug)
-	CFLAGS+=-g3 -O0 -DDEBUG
-	CFLAGSDLL+=-g3 -O0
+	CFLAGS+=-Z7 -Od -DDEBUG
+	CFLAGSDLL+=-Z7 -Od
 else
-	CFLAGS+=-O3
-	CFLAGSDLL+=-O3
+	CFLAGS+=-O2
+	CFLAGSDLL+=-O2
 endif
 
 LIBRARIES=C:\Programming\C\libraries
@@ -28,7 +33,6 @@ LDLIBS=-lcurl -lujdecode $(LDLIBSTRANS)
 LDLIBSREQUESTS=-lcurl -lwldap32 -lz -lssl -lcrypto -lgdi32 -lbrotlidec -lws2_32 $(LDLIBSTRANS)
 
 REFS=lib/liblogger.dll lib/libtrans.dll lib/libhreq.dll main.o action_wrappers.o test_controller.o test_plan.o
-MACROS=-DCURL_STATICLIB
 EXENAME=loadtestingtool
 
 all: build

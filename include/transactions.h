@@ -1,3 +1,5 @@
+#include "common_types.h"
+
 typedef enum{
     SUCCESS,
     FAIL
@@ -11,6 +13,5 @@ typedef struct{
     transaction_status status;
 } transaction;
 
-void transaction_init();
-transaction transaction_begin(char * name);
-void transaction_end(transaction * trnsctn, transaction_status);
+EXPORT transaction transaction_begin(char * name);
+EXPORT void transaction_end(transaction * trnsctn, transaction_status);

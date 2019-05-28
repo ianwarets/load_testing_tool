@@ -10,7 +10,7 @@ static size_t save_response_data(void*, size_t, size_t, void *);
 static void save_request_statistics(char * name, time_t * time);
 static long make_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data);
 
-__thread CURL * hCurl;
+__declspec( thread ) CURL * hCurl;
 
 int init_http_requests(){
 	hCurl = curl_easy_init();
@@ -32,16 +32,18 @@ int init_http_requests(){
 }
 
 void http_requests_cleanup(){
-	curl_easy_cleanup(hCurl);
+	if(hCurl != NULL){
+		curl_easy_cleanup(hCurl);
+	}
 }
 
-long get_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){	
+EXPORT long get_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){	
 	curl_easy_setopt(hCurl, CURLOPT_HTTPGET, 1L);
 	return make_request(name, url, headers, response_data);
 	
 }
 
-long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data, char * post_data, long post_data_size){
+EXPORT long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data, char * post_data, long post_data_size){
 	if(curl_easy_setopt(hCurl, CURLOPT_POSTFIELDS, post_data) != CURLE_OK){
 		error_message(L"Failed to set POST body value");
 		return -1;
@@ -222,7 +224,7 @@ static size_t save_response_data(void* buffer, size_t size, size_t nmemb, void *
 	
 	void * response_last_byte = *response;
 	if(current_size > 1){		
-		response_last_byte += current_size - 1;
+		((char*)response_last_byte) += current_size - 1;
 	}
 #ifdef DEBUG
 	debug_message(L"Response pointer value: %p.\tresponse_last_byte %i", response_last_byte);
@@ -236,7 +238,7 @@ static size_t save_response_data(void* buffer, size_t size, size_t nmemb, void *
 	return result;
 }
 
-char * get_redirect_link(){
+EXPORT char * get_redirect_link(){
 	char * redir_url = NULL;
 	curl_easy_getinfo(hCurl, CURLINFO_REDIRECT_URL , &redir_url);
 	return redir_url;

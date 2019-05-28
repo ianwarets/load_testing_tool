@@ -7,32 +7,119 @@
             "label": "debug",
             "type": "shell",
             "group": "build",
-            "command": "mingw32-make",
+            "command": "cl.exe",
             "args": [
-                "mode=debug"
+                "/Z7",
+                "/Fe",
+                "loadtestingtool.exe"
             ],
             "problemMatcher": [
-                "$gcc"
+                "$msCompile"
             ]
         },
         {
             "label": "build",
             "type": "shell",
             "group": "build",
-            "command": "mingw32-make",
+            "command": "cl.exe",
             "args": [
-                "mode=release"
+                ""
             ],
             "problemMatcher": [
-                "$gcc"
+                "$msCompile"
             ]
         },
         {
             "label": "clean",
             "type": "shell",
             "group": "build",
-            "command": "mingw32-make clean",
-            "problemMatcher": []
+            "command": "del",
+            "args": [
+                "/S",
+                "*.o"
+            ]
+        },
+        {
+            "label": "http_requests debug",
+            "group": "build",
+            "command": "cl.exe",
+            "args": [
+                "/Z7",
+                "/TC",
+                "/W4",
+                "/LDd",
+                "/Od",
+                "/MDd",
+                "/Fo.\\obj\\",
+                "/I.\\include",
+                "http_requests.c",
+                "/Fe.\\LIB\\libhreq.dll",
+                "/link /LIBPATH:.\\lib\\",
+                "/DEFAULTLIB:liblogger",
+                "/DEFAULTLIB:libcurl",
+                "/SUBSYSTEM:WINDOWS",                
+                "/INCREMENTAL:NO"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "dependsOn":[
+                "logger debug"
+            ]
+        },
+        {
+            "label": "transaction debug",
+            "group": "build",
+            "command": "cl.exe",
+            "args": [
+                "/Z7",
+                "/TC",
+                "/W4",
+                "/LDd",
+                "/Od",
+                "/MDd",
+                "/Fo.\\obj\\",
+                "/I.\\include",
+                "transactions.c",
+                "/Fe.\\LIB\\libtrans.dll",
+                "/link /LIBPATH:.\\lib\\",
+                "/DEFAULTLIB:liblogger",
+                "/SUBSYSTEM:WINDOWS",                
+                "/INCREMENTAL:NO"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "dependsOn":[
+                "logger debug"
+            ]
+        },
+        {
+            "label": "logger debug",
+            "group": "build",
+            "command": "cl.exe",
+            "args": [
+                "/Z7",
+                "/TC",
+                "/W4",
+                "/LDd",
+                "/Od",
+                "/MDd",
+                "/D \"_WINDLL\"",
+                "/D \"_LIB\"",
+                "/Fo.\\obj\\",
+                "/I.\\include",
+                "/IC:\\Programming\\C\\libs\\libP7Client_v5.1\\Headers",
+                "logger.c",
+                "/Fe.\\lib\\liblogger.dll",
+                "/link /LIBPATH:.\\lib\\",
+                "/DEFAULTLIB:P7x64.dll.lib",
+                "/SUBSYSTEM:WINDOWS",
+                "/INCREMENTAL:NO"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ]
         }
     ]
 }
