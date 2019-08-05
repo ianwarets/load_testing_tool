@@ -19,5 +19,11 @@
         "unordered_map": "c",
         "zlog.h": "c",
         "main.h": "c"
+    },
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
     }
 }

@@ -11,13 +11,13 @@ actions_stats_data statistics = {.statistics = NULL, .count = 0};
 int main(int argc, char ** argv){	
 	if(argc == 1){
 		print_help();
-		return 0;
+		return EXIT_SUCCESS;
 	}
 	char * test_plan_file_name = argv[1];
 
 	if(logger_init() == 1){
 		fprintf(stderr, "Failed to initialize logger\n");
-		return 0;
+		return EXIT_SUCCESS;
 	}
 
 	loggers = logger_get_loggers();
@@ -25,35 +25,36 @@ int main(int argc, char ** argv){
 	runner_data * r_data = generate_runner_data(test_plan_file_name);
 	if(!r_data){
 		printf("generate_runner_data returned NULL\n");
-		return 0;
+		return EXIT_SUCCESS;
 	}
 	HANDLE hcontroller_thread = CreateThread(NULL, 0, test_controller, r_data, 0, NULL);
 	if(!hcontroller_thread){
 		free_runner_data(r_data);
 		printf("Failed to create controller thread. [%lu]\n", GetLastError());
-		return 1;
+		return EXIT_FAILURE;
 	}
 	printf("Controller started successfully\n");
 	_Atomic int stop_execution = 0;
-	HANDLE hinput_listener_thread = CreateThread(NULL, 0, listen_input_commands, &stop_execution, 0, NULL);
+	/*HANDLE hinput_listener_thread = CreateThread(NULL, 0, listen_input_commands, &stop_execution, 0, NULL);
 	if(!hinput_listener_thread){
 		printf("Failed to create input listener thread. [%lu]\n", GetLastError());
-		return 1;
-	}	
+		return EXIT_FAILURE;
+	}	*/
 	
 	// Run table printing in separate thread.
 	HANDLE hprint_data_table_thread = CreateThread(NULL, 0, print_table, r_data, 0, NULL);
 	if(!hprint_data_table_thread){
 		printf("Failed to create print thread. [%lu]\n", GetLastError());
-		return 1;
+		return EXIT_FAILURE;
 	}
 	// This indicated that all test steps are done by test controller.
 	WaitForSingleObject(hcontroller_thread, INFINITE);
+	WaitForSingleObject(hprint_data_table_thread, INFINITE);
 	// Need to wait remaining threads to finish.
 	//WaitForMultipleObjects();
 	free_runner_data(r_data);
 	logger_close();
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void print_help(){
@@ -149,8 +150,11 @@ static DWORD WINAPI print_table(LPVOID data_pointer){
 		return 1L;
 	}
 
+	COORD origin_coordinates = {.X= 0, .Y = 0};
+	system("cls");
 	while(1){
-		system("cls");
+		
+		SetConsoleCursorPosition(h_stdout, origin_coordinates);
 		get_thread_statistics(r_data, &statistics);
 		const void * data_buffer = create_table_data(&statistics);
 		DWORD num_of_chars = strlen(data_buffer);
@@ -159,14 +163,19 @@ static DWORD WINAPI print_table(LPVOID data_pointer){
 			printf("Failed to write console.");
 			break;
 		}	
-		Sleep(3000);	
-		// Catch SIGTERM or similar signals to exit the loop
-		/*
-		if(SIGTERM){
-			system("cls");
+		int exit_programm = 0;
+		for(int i = 0; i < statistics.count; i++){
+			if(statistics.statistics[i].running > 0){
+				continue;
+			}
+			else{
+				exit_programm |= 1;
+			}
+		}
+		if(exit_programm == 1){
 			break;
 		}
-		*/
+		Sleep(500);
 	}
 	if(!SetConsoleTextAttribute(h_stdout, w_old_color_attrs)){
 		printf("Failed to set console text attribute.");
@@ -232,3 +241,13 @@ static DWORD WINAPI listen_input_commands(LPVOID feedback_object){
 	}
 	return 0L;
 }
+/*
+static int signals_handler(int sig, int sig_subcode){
+	PVOID exception_handler = AddVectoredExceptionHandler(1, vector_exception_handler);
+	SetUnhandledExceptionFilter(NULL);
+	return 0;
+}
+
+static LONG WINAPI vector_exception_handler(struct _EXCEPTION_POINTERS * _exception+info){
+	if(!execution_context)
+}*/

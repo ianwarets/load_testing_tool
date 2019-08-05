@@ -35,7 +35,7 @@ int init_http_requests(){
 	return 0;
 }
 
-void http_requests_cleanup(CURL * hCurl){
+void http_requests_cleanup(){
 	curl_easy_cleanup(hCurl);
 }
 

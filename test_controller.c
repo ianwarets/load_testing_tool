@@ -50,7 +50,14 @@ static DWORD WINAPI control_step_threads(LPVOID parameter){
             thr_for_cur_action = thr_step_action - actions[i].running_threads;     
         }   
         else{
-            thr_for_cur_action = thr_step_action;
+            // Stop threads.
+            if(actions[i].running_threads >= thr_step_action){
+                thr_for_cur_action = thr_step_action;
+            }
+            else{
+                thr_for_cur_action = actions[i].running_threads;
+            }
+            
         }
                 
         for(unsigned long t = 0; t < thr_for_cur_action; t++){            
@@ -76,6 +83,7 @@ static DWORD WINAPI control_step_threads(LPVOID parameter){
 #ifdef DEBUG
             zlog_debug(loggers->common, "Sleep for %li", slope_interval);
 #endif
+        //TODO: Realize this delay by Timer, because it is more accurate then Sleeo()
             Sleep(slope_interval); 
         }
     }
