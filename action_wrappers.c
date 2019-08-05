@@ -62,12 +62,12 @@ static DWORD actions_wrapper(LPVOID thread_params, void(*pacing_function)()){
     init_routine();
     do{
         if(e_signal_flag){
-            printf("Error occured in thread # %i\n", thread->index);
+            error_message(L"Error occured in thread # %i\n", thread->index);
             break;
         }
         pacing_function(action_routine, thread_params, action->pacing);   
         if(GetCurrentThreadId() % 2 == 0){
-            raise(SIGSEGV);    
+            //raise(SIGSEGV);    
         }
     }
     while(!thread->stop_thread);    

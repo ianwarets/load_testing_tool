@@ -1,7 +1,6 @@
 #include "test_controller.h"
 #include <windows.h>
 
-extern zlog_categories * loggers;
 /**
  * Функция запуска/останова потоков ступени. 
  * Запускается в потоке, чтоб не задерживать отсчет времени для следующих ступеней.
@@ -14,8 +13,7 @@ static DWORD WINAPI control_step_threads(LPVOID parameter){
     action_data * actions = current_step->r_data->actions;
     unsigned int a_count = current_step->r_data->actions_count;
 #ifdef DEBUG
-    zlog_debug(loggers->common, 
-            "%s %i threads with delay of %li s.", 
+    debug_message(L"%s %i threads with delay of %li s.", 
             current_step->to_start ? "Starting" : "Stopping",
             current_step->threads_count,
             current_step->slope_delay);
@@ -67,21 +65,21 @@ static DWORD WINAPI control_step_threads(LPVOID parameter){
                 actions[i].threads[t].index = t + 1;
                 actions[i].threads[t].handle = CreateThread(NULL, 0, actions[i].runner, (PVOID)&actions[i].threads[t], 0, NULL);
                 if(actions[i].threads[t].handle == NULL){
-                    zlog_error(loggers->common, "Failed to create thread for step #%u, action #%lu, thread #%lu.", current_step->step_index, i, t);
+                    error_message(L"Failed to create thread for step #%u, action #%lu, thread #%lu.", current_step->step_index, i, t);
                     continue;
                 }                    
 #ifdef DEBUG
-                zlog_debug(loggers->common, "Thread # %i for step created.", t);
+                debug_message(L"Thread # %i for step created.", t);
 #endif
             }            
             else{
 #ifdef DEBUG
-                zlog_debug(loggers->common, "Signaling action #%lu, thread # %lu to stop", i, t);
+                debug_message(L"Signaling action #%lu, thread # %lu to stop", i, t);
 #endif
                 actions[i].threads[t].stop_thread = 1;
             }           
 #ifdef DEBUG
-            zlog_debug(loggers->common, "Sleep for %li", slope_interval);
+            debug_message(L"Sleep for %li", slope_interval);
 #endif
         //TODO: Realize this delay by Timer, because it is more accurate then Sleeo()
             Sleep(slope_interval); 
@@ -96,7 +94,7 @@ static DWORD WINAPI control_step_threads(LPVOID parameter){
 static VOID CALLBACK step_routine(LPVOID p_runner_data, DWORD lowTimer, DWORD highTimer){
     HANDLE step_thread = CreateThread(NULL, 0, control_step_threads, p_runner_data, 0, NULL);
     if(!step_thread){
-        zlog_error(loggers->common, "Failed to create thread for step launch. [%s].", GetLastError());        
+        error_message(L"Failed to create thread for step launch. [%s].", GetLastError());        
     }  
 }
 
@@ -113,35 +111,35 @@ DWORD WINAPI test_controller(LPVOID p_runner_data){
     //long long multiplexer = -10000000LL;
     //LARGE_INTEGER start_time = {.QuadPart = next_time_interval * multiplexer};
 #ifdef DEBUG
-    zlog_debug(loggers->common, "Start delay : %li", r_data->start_delay);    
+    debug_message(L"Start delay : %li", r_data->start_delay);    
 #endif
 
     /* HANDLE step_timer = CreateWaitableTimer(&security_attr, TRUE, "Local: Step timer.");
     if(step_timer == NULL){
-        zlog_error(loggers->common, "Failed to create timer.");
+        error_message(L"Failed to create timer.");
         ExitThread(ERR_CREATE_TIMER);
         return 1;
     } */
 
     for(unsigned int step_index = 0; step_index < r_data->steps_count; step_index++){
 /*#ifdef DEBUG
-        zlog_debug(loggers->common, "Timer value is: %lli.", start_time.QuadPart);
+        debug_message(L"Timer value is: %lli.", start_time.QuadPart);
 #endif*/
         /* BOOL result = SetWaitableTimer(step_timer, &start_time, 0, step_routine, p_runner_data, FALSE);
         if(!result){
-            zlog_error(loggers->common, "Failed to set timer for step # %u.", step_index);
+            error_message(L"Failed to set timer for step # %u.",  step_index);
             ExitThread(ERR_SET_TIMER);
         } */
 #ifdef DEBUG
-        zlog_debug(loggers->common, "Sleep for INFINITE.");
+        debug_message(L"Sleep for INFINITE.");
 #endif
         SleepEx(next_time_interval * 1000, TRUE);
         step_routine(&r_data->steps[step_index], 0, 0);
 
-        /* zlog_info(loggers->common, "Canceling waitable timer.");
+        /* info_message(L"Canceling waitable timer.");
         result = CancelWaitableTimer(step_timer);
         if(!result){
-            zlog_error(loggers->common, "Failed to cancel timer for step # %u.", step_index);
+            error_message(L"Failed to cancel timer for step # %u.", step_index);
             ExitThread(ERR_CANCEL_TIMER);
         } */
         next_time_interval = r_data->steps[step_index].duration +  r_data->steps[step_index].slope_delay;
@@ -149,7 +147,7 @@ DWORD WINAPI test_controller(LPVOID p_runner_data){
     }
 
    /*  if(!CloseHandle(step_timer)){
-        zlog_error(loggers->common, "Failed to close timer handler.");
+        error_message(L"Failed to close timer handler.");
     } */
     return 0;
 }

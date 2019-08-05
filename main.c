@@ -3,9 +3,8 @@
 static void get_thread_statistics(runner_data *, actions_stats_data *);
 char * create_table_data(actions_stats_data *statistics);
 static DWORD WINAPI print_table(LPVOID);
-static DWORD WINAPI listen_input_commands(LPVOID feedback_object);
+//static DWORD WINAPI listen_input_commands(LPVOID feedback_object);
 
-zlog_categories * loggers;
 actions_stats_data statistics = {.statistics = NULL, .count = 0};
 
 int main(int argc, char ** argv){	
@@ -14,13 +13,6 @@ int main(int argc, char ** argv){
 		return EXIT_SUCCESS;
 	}
 	char * test_plan_file_name = argv[1];
-
-	if(logger_init() == 1){
-		fprintf(stderr, "Failed to initialize logger\n");
-		return EXIT_SUCCESS;
-	}
-
-	loggers = logger_get_loggers();
 
 	runner_data * r_data = generate_runner_data(test_plan_file_name);
 	if(!r_data){
@@ -34,7 +26,7 @@ int main(int argc, char ** argv){
 		return EXIT_FAILURE;
 	}
 	printf("Controller started successfully\n");
-	_Atomic int stop_execution = 0;
+	//_Atomic int stop_execution = 0;
 	/*HANDLE hinput_listener_thread = CreateThread(NULL, 0, listen_input_commands, &stop_execution, 0, NULL);
 	if(!hinput_listener_thread){
 		printf("Failed to create input listener thread. [%lu]\n", GetLastError());
@@ -53,7 +45,6 @@ int main(int argc, char ** argv){
 	// Need to wait remaining threads to finish.
 	//WaitForMultipleObjects();
 	free_runner_data(r_data);
-	logger_close();
 	return EXIT_SUCCESS;
 }
 
@@ -67,7 +58,7 @@ static void get_thread_statistics(runner_data * r_data, actions_stats_data *stat
 		statistics->statistics = (action_stats_data*)malloc(sizeof(action_stats_data) * actions_count + 1);
 	}
 	if(statistics->statistics == NULL){
-		zlog_error(loggers->common, "Failed to allocate memory forstatistics->statistics structures array");
+		error_message(L"Failed to allocate memory forstatistics->statistics structures array");
 		return;
 	}
 	statistics->count = actions_count;
@@ -88,7 +79,7 @@ static void get_thread_statistics(runner_data * r_data, actions_stats_data *stat
 				continue;
 			}
 			if(!GetExitCodeThread(r_data->actions[i].threads[t].handle, &result)){
-				zlog_error(loggers->common, "Failed to get thread exit code for action %s, thread # %u", (statistics->statistics)[i].name, t);
+				error_message(L"Failed to get thread exit code for action %s, thread # %u", (statistics->statistics)[i].name, t);
 				(statistics->statistics)[i].failed++;
 				continue;
 			}
@@ -227,7 +218,7 @@ char * create_table_data(actions_stats_data *statistics){
 	return output;
 }
 
-static DWORD WINAPI listen_input_commands(LPVOID feedback_object){
+/*static DWORD WINAPI listen_input_commands(LPVOID feedback_object){
 	char input;
 	while(1){
 		input = getchar();
@@ -241,6 +232,7 @@ static DWORD WINAPI listen_input_commands(LPVOID feedback_object){
 	}
 	return 0L;
 }
+*/
 /*
 static int signals_handler(int sig, int sig_subcode){
 	PVOID exception_handler = AddVectoredExceptionHandler(1, vector_exception_handler);
