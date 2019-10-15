@@ -1,14 +1,14 @@
 #include "test_controller.h"
-#include <windows.h>
+#include <pthread.h>
+#include <errno.h>
+#include <string.h>
+#include <unistd.h>
 
 /**
  * Функция запуска/останова потоков ступени. 
  * Запускается в потоке, чтоб не задерживать отсчет времени для следующих ступеней.
  */
-static DWORD WINAPI control_step_threads(LPVOID parameter){
-    LARGE_INTEGER freq;
-    QueryPerformanceFrequency(&freq);
-
+static void * control_step_threads(void * parameter){
     step_data * current_step = ((step_data*)parameter);
     action_data * actions = current_step->r_data->actions;
     unsigned int a_count = current_step->r_data->actions_count;
@@ -63,9 +63,25 @@ static DWORD WINAPI control_step_threads(LPVOID parameter){
                 actions[i].threads[t].stop_thread = 0;
                 actions[i].threads[t].action = &actions[i];
                 actions[i].threads[t].index = t + 1;
-                actions[i].threads[t].handle = CreateThread(NULL, 0, actions[i].runner, (PVOID)&actions[i].threads[t], 0, NULL);
-                if(actions[i].threads[t].handle == NULL){
-                    error_message(L"Failed to create thread for step #%u, action #%lu, thread #%lu.", current_step->step_index, i, t);
+                int result = pthread_create(&(actions[i].threads[t].handle), NULL, actions[i].runner, (void*)&actions[i].threads[t]);
+                if(result != 0){
+                    static wchar_t * err_message_template = L"Failed to create thread for step #%u, action #%lu, thread #%lu. %s";
+                    static const size_t err_size = 100;
+                    wchar_t err_text[err_size];
+                    switch (result){
+                        case EAGAIN:
+                            swprintf(err_text, err_size, L"Insufficient resources to create another thread");
+                            break;
+                        case EINVAL:
+                            swprintf(err_text, err_size, L"Invalid settings in attr.");
+                            break;
+                        case EPERM:
+                            swprintf(err_text, err_size, L"No permission to set the scheduling policy and parameters specified in attr");
+                            break;
+                        default:
+                            break;
+                    }
+                    error_message(err_message_template, current_step->step_index, i, t, err_text);
                     continue;
                 }                    
 #ifdef DEBUG
@@ -82,7 +98,7 @@ static DWORD WINAPI control_step_threads(LPVOID parameter){
             debug_message(L"Sleep for %li", slope_interval);
 #endif
         //TODO: Realize this delay by Timer, because it is more accurate then Sleeo()
-            Sleep(slope_interval); 
+            usleep(slope_interval * 1000000); 
         }
     }
     return 0;
@@ -91,14 +107,31 @@ static DWORD WINAPI control_step_threads(LPVOID parameter){
  * Функция выполняет запуск\останов потоков каждой ступени теста.
  * Функция вызывается по истечении времени таймера
  */
-static VOID CALLBACK step_routine(LPVOID p_runner_data, DWORD lowTimer, DWORD highTimer){
-    HANDLE step_thread = CreateThread(NULL, 0, control_step_threads, p_runner_data, 0, NULL);
-    if(!step_thread){
-        error_message(L"Failed to create thread for step launch. [%s].", GetLastError());        
+static void step_routine(void * p_runner_data){
+    pthread_t thread;
+    int result = pthread_create(&thread, NULL, control_step_threads, p_runner_data);
+    if(result != 0){
+        static wchar_t * err_message_template = L"Failed to create thread for step launch. [%s].";
+        static const size_t err_size = 100;
+        wchar_t err_text[err_size];
+        switch (result){
+            case EAGAIN:
+                swprintf(err_text, err_size, L"Insufficient resources to create another thread");
+                break;
+            case EINVAL:
+                swprintf(err_text, err_size, L"Invalid settings in attr.");
+                break;
+            case EPERM:
+                swprintf(err_text, err_size, L"No permission to set the scheduling policy and parameters specified in attr");
+                break;
+            default:
+                break;
+        }
+        error_message(err_message_template, err_text);
     }  
 }
 
-DWORD WINAPI test_controller(LPVOID p_runner_data){
+void * test_controller(void * p_runner_data){
     runner_data * r_data = ((runner_data*)p_runner_data);
     /*struct _SECURITY_ATTRIBUTES security_attr;
     security_attr.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -133,8 +166,10 @@ DWORD WINAPI test_controller(LPVOID p_runner_data){
 #ifdef DEBUG
         debug_message(L"Sleep for INFINITE.");
 #endif
-        SleepEx(next_time_interval * 1000, TRUE);
-        step_routine(&r_data->steps[step_index], 0, 0);
+        if(usleep(next_time_interval * 1000000) != 0){
+            error_message(L"Failed to make sleep");
+        }
+        step_routine(&r_data->steps[step_index]);
 
         /* info_message(L"Canceling waitable timer.");
         result = CancelWaitableTimer(step_timer);

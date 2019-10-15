@@ -1,5 +1,5 @@
-#include <windows.h>
+typedef void * (*p_pacing_function)(void*);
 
-DWORD WINAPI no_pacing(LPVOID);
-DWORD WINAPI fixed_pacing(LPVOID);
-DWORD WINAPI relative_pacing(LPVOID);
+void *  no_pacing(void *);
+void *  fixed_pacing(void *);
+void *  relative_pacing(void *);

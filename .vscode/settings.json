@@ -19,7 +19,12 @@
         "unordered_map": "c",
         "zlog.h": "c",
         "main.h": "c",
-        "logger.h": "c"
+        "logger.h": "c",
+        "errno.h": "c",
+        "error.h": "c",
+        "stdbool.h": "c",
+        "cstdbool": "c",
+        "ltt_common.h": "c"
     },
     "files.exclude": {
         "**/.classpath": true,

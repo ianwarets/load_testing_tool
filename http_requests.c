@@ -1,8 +1,8 @@
 #include "http_requests.h"
 #include <string.h>
 #include <time.h>
-#include <windows.h>
 #include <logger.h>
+#include <stdlib.h>
 
 
 static long http_request(char *, char*, struct curl_slist *, response_data_struct *);

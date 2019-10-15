@@ -1,8 +1,9 @@
-#include <windows.h>
+#include "logger.h"
+#include "action_wrappers.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <wchar.h>
-#include "logger.h"
+#include <pthread.h>
 
 //#pragma once
 enum thread_errors {
@@ -16,7 +17,8 @@ typedef struct action action_data;
 typedef struct thread{
 	_Atomic int stop_thread;	
 	unsigned int index;
-	void * handle;
+	// Thread handle
+	pthread_t handle;
 	action_data * action;
 } thread_data;
 
@@ -28,8 +30,10 @@ struct action{
 	void(*action)();
 	void(*end)();
 	wchar_t * name;
-	HMODULE action_lib_handler;
-	LPTHREAD_START_ROUTINE runner;
+	// Pointer to dynamicly loaded library.
+	void * action_lib_handler;
+	// Pointer to runner function.
+	p_pacing_function runner;
     unsigned long pacing;
     unsigned int ratio;
 };
@@ -38,7 +42,7 @@ typedef struct runner runner_data;
 
 typedef struct step{
 	unsigned int step_index;
-	//indicate step type: run or stop  threads
+	// Indicate step type: run or stop  threads.
 	int to_start;
     unsigned long duration;
 	unsigned long slope_delay;
@@ -58,5 +62,5 @@ struct runner{
 /**
  *  Запуск ступеней теста по таймеру. 
  */
-DWORD WINAPI test_controller(LPVOID);
+void * test_controller(void *);
 

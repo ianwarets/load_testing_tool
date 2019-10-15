@@ -3,4 +3,5 @@
 *.o
 *.a
 *.log
+*.so
 /bin/*.json

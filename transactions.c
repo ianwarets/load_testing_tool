@@ -1,24 +1,21 @@
-#include <windows.h>
 #include "transactions.h"
+#include "ltt_common.h"
 #include <logger.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 static void save_statistics(transaction *);
-static long long get_duration(transaction *);
-static long long get_ticks_count();
-static char * convert_systime_to_date_time(SYSTEMTIME st);
+static unsigned long long get_duration(transaction *);
 
 transaction transaction_begin(char * name){
     // Получить текущее значение времени. Передать полученное значение и название транзакции в хранилище    
-    SYSTEMTIME lt;
-    GetSystemTime(&lt);
+    struct timespec lt;
+    clock_gettime(CLOCK_MONOTONIC, &lt);
     
-    long long ticks = get_ticks_count();
     transaction tr = {        
         .name = name,
-        .start_ticks_count = ticks,
-        .start_time = convert_systime_to_date_time(lt)
+        .start_time = lt,
     };   
 
     info_message(L"Transaction:\"%s\" - Start time: %s", name, tr.start_time);
@@ -30,10 +27,12 @@ void transaction_end(transaction * transaction, transaction_status status){
         error_message(L"Transaction is NULL");
         return;
     }
-    transaction->end_ticks_count = get_ticks_count();
+    struct timespec lt;
+    clock_gettime(CLOCK_MONOTONIC, &lt);
+
+    transaction->end_time = lt;
     transaction->status = status;
-    save_statistics(transaction);
-    free(transaction->start_time);    
+    save_statistics(transaction);   
 }
 
 static void save_statistics(transaction * transaction){
@@ -42,7 +41,7 @@ static void save_statistics(transaction * transaction){
         return;
     }
     char * status = transaction->status == SUCCESS ? "SUCCESS" : "FAIL";
-    long long duration = get_duration(transaction);
+    unsigned long long duration = get_duration(transaction);
 #ifdef DEBUG
     debug_message(L"Start time: %s. Duration: %lli. Name: %s. Status: %s"
                 , transaction->start_time, duration, transaction->name, status);
@@ -56,33 +55,8 @@ static void save_statistics(transaction * transaction){
 }
 
 /**
- * Returns the operation duration in milliseconds
- * 
+ * Returns the operation duration in nanoseconds * 
  */
-static long long get_duration(transaction * trnsctn){
-    static LARGE_INTEGER frequency; 
-    if(frequency.QuadPart == 0){
-        QueryPerformanceFrequency(&frequency);
-    }
-    long long difference = trnsctn->end_ticks_count - trnsctn->start_ticks_count;
-    //To eliminate loss of precision convert result to microseconds.
-    difference *= 1000000;
-    difference /= frequency.QuadPart;
-    return difference;
-}
-
-static long long get_ticks_count(){
-    LARGE_INTEGER time;
-    QueryPerformanceCounter(&time);
-    return time.QuadPart;
-}
-
-static char * convert_systime_to_date_time(SYSTEMTIME st){
-    char * const date_time_format = "%02d.%02d.%d %02d:%02d:%02d.%03d";
-    char * output = (char *)malloc(strlen(date_time_format) + 1);
-    if(output == NULL){
-        error_message(L"Failed to allocate memory for date_time convertion output.");
-    }
-    sprintf(output, date_time_format, st.wDay, st.wMonth, st.wYear, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
-    return output;
+static unsigned long long get_duration(transaction * trnsctn){
+    return get_time_difference(trnsctn->start_time, trnsctn->end_time);
 }

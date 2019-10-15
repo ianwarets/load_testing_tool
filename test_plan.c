@@ -1,10 +1,14 @@
 #include "test_plan.h"
-#include <ujdecode.h>
+#include "ujdecode.h"
 #include "logger.h"
 #include "action_wrappers.h"
+#include <stdlib.h>
+#include <stdbool.h>
+#include <dlfcn.h>
+#include <string.h>
 
 static int create_test_plan_from_json(char *, test_plan *);
-static LPTHREAD_START_ROUTINE define_pacing_function(wchar_t *);
+static p_pacing_function define_pacing_function(wchar_t *);
 static int save_json_string(char *, UJObject , wchar_t **);
 static int get_function_references(action_data *, wchar_t *);
 static int generate_actions_data(runner_data * r_data, test_plan t_plan);
@@ -87,7 +91,7 @@ runner_data * generate_runner_data(char * test_plan_name){
         r_data->steps[i].slope_delay = t_plan.steps[i].slope_duration;
         r_data->steps[i].threads_count = t_plan.steps[i].threads_count;
         // In case step type is equal to "start" then step will start threads, else in will be considered as stop threads step
-        r_data->steps[i].to_start = wcscmp(t_plan.steps[i].step_type, L"start") == 0 ? TRUE : FALSE;
+        r_data->steps[i].to_start = wcscmp(t_plan.steps[i].step_type, L"start") == 0 ? true : false;
         if(r_data->steps[i].to_start){
             r_data->total_threads_count += r_data->steps[i].threads_count;
         }
@@ -120,7 +124,7 @@ void free_runner_data(runner_data * run_data){
     }
     for(long i = 0; i < run_data->actions_count; i++){
         action_data action = run_data->actions[i];
-        FreeLibrary(action.action_lib_handler);
+        dlclose(action.action_lib_handler);
         action.action = NULL;
         action.init = NULL;
         action.end = NULL;
@@ -264,37 +268,38 @@ static int get_function_references(action_data * p_action, wchar_t * file_name){
     }
     f_name[fname_len] = '\0';
 
-    p_action->action_lib_handler = LoadLibrary(f_name);
+    char * err_msg_buf;
+    p_action->action_lib_handler = dlopen(f_name, RTLD_LAZY);     
     if(p_action->action_lib_handler == NULL){        
-        LPSTR messageBuffer = NULL;
-        FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                                 NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
-        error_message(L"Failed to load file %s. [%s].", f_name, messageBuffer);
-        LocalFree(messageBuffer);
+        err_msg_buf = dlerror();    
+        error_message(L"Failed to load file %s. [%s].", f_name, err_msg_buf);
         return 1;
     }
-    p_action->action = (void*)GetProcAddress(p_action->action_lib_handler, "action");
-    if(p_action->action == NULL){        
-        error_message(L"Failed to get \"action\" method from file: %s.", f_name);
-        FreeLibrary(p_action->action_lib_handler);
+    p_action->action = (void*)dlsym(p_action->action_lib_handler, "action");
+    err_msg_buf = dlerror();
+    if(p_action->action == NULL && err_msg_buf != NULL){        
+        error_message(L"Failed to get \"action\" method from file: %s. %s", f_name, err_msg_buf);
+        dlclose(p_action->action_lib_handler);
         return 1;
     }
-    p_action->init = (void*)GetProcAddress(p_action->action_lib_handler, "init");
-    if(p_action->init == NULL){        
-        error_message(L"Failed to get \"init\" method from file: %s.", f_name);
-        FreeLibrary(p_action->action_lib_handler);
+    p_action->init = (void*)dlsym(p_action->action_lib_handler, "init");
+    err_msg_buf = dlerror();
+    if(p_action->init == NULL && err_msg_buf != NULL){        
+        error_message(L"Failed to get \"init\" method from file: %s. %s", f_name, err_msg_buf);
+        dlclose(p_action->action_lib_handler);
         return 1;
     }
-    p_action->end = (void*)GetProcAddress(p_action->action_lib_handler, "end");
-    if(p_action->end == NULL){        
-        error_message(L"Failed to get \"end\" method from file: %s.", f_name);
-        FreeLibrary(p_action->action_lib_handler);
+    p_action->end = (void*)dlsym(p_action->action_lib_handler, "end");
+    err_msg_buf = dlerror();
+    if(p_action->end == NULL && err_msg_buf != NULL){        
+        error_message(L"Failed to get \"end\" method from file: %s. %s", f_name, err_msg_buf);
+        dlclose(p_action->action_lib_handler);
         return 1;
     }
     return 0;
 }
 
-static LPTHREAD_START_ROUTINE define_pacing_function(wchar_t * pacing_type){
+static p_pacing_function define_pacing_function(wchar_t * pacing_type){
     if(wcscmp(pacing_type, L"no") == 0){
         return no_pacing;
     }
@@ -360,7 +365,7 @@ static int generate_actions_data(runner_data * r_data, test_plan t_plan){
             return 1;
         }
         for(int t = 0; t < th_count; t++){
-            actions[i].threads[t].handle = NULL;
+            actions[i].threads[t].handle = 0;
             actions[i].threads[t].action = NULL;
             actions[i].threads[t].index = 0;
             actions[i].threads[t].stop_thread = 0;

@@ -7,7 +7,7 @@
             "label": "debug",
             "type": "shell",
             "group": "build",
-            "command": "mingw32-make",
+            "command": "make",
             "args": [
                 "mode=debug"
             ],
@@ -19,7 +19,7 @@
             "label": "build",
             "type": "shell",
             "group": "build",
-            "command": "mingw32-make",
+            "command": "make",
             "args": [
                 "mode=release"
             ],
@@ -31,7 +31,7 @@
             "label": "clean",
             "type": "shell",
             "group": "build",
-            "command": "mingw32-make clean",
+            "command": "make clean",
             "problemMatcher": []
         }
     ]

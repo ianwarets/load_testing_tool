@@ -2,7 +2,7 @@
 
 static void get_thread_statistics(runner_data *, actions_stats_data *);
 char * create_table_data(actions_stats_data *statistics);
-static DWORD WINAPI print_table(LPVOID);
+static void * print_table(void *);
 //static DWORD WINAPI listen_input_commands(LPVOID feedback_object);
 
 actions_stats_data statistics = {.statistics = NULL, .count = 0};
@@ -19,10 +19,11 @@ int main(int argc, char ** argv){
 		printf("generate_runner_data returned NULL\n");
 		return EXIT_SUCCESS;
 	}
-	HANDLE hcontroller_thread = CreateThread(NULL, 0, test_controller, r_data, 0, NULL);
-	if(!hcontroller_thread){
+	pthread_t hcontroller_thread;
+	
+	if(pthread_create(&hcontroller_thread, NULL, test_controller, r_data)){
 		free_runner_data(r_data);
-		printf("Failed to create controller thread. [%lu]\n", GetLastError());
+		printf("Failed to create controller thread. [%s]\n", strerror(errno));
 		return EXIT_FAILURE;
 	}
 	printf("Controller started successfully\n");
@@ -34,14 +35,15 @@ int main(int argc, char ** argv){
 	}	*/
 	
 	// Run table printing in separate thread.
-	HANDLE hprint_data_table_thread = CreateThread(NULL, 0, print_table, r_data, 0, NULL);
-	if(!hprint_data_table_thread){
-		printf("Failed to create print thread. [%lu]\n", GetLastError());
+	pthread_t hprint_data_table_thread;
+	
+	if(pthread_create(&hprint_data_table_thread, NULL, print_table, r_data) != 0){
+		printf("Failed to create print thread. [%s]\n", strerror(errno));
 		return EXIT_FAILURE;
 	}
 	// This indicated that all test steps are done by test controller.
-	WaitForSingleObject(hcontroller_thread, INFINITE);
-	WaitForSingleObject(hprint_data_table_thread, INFINITE);
+	pthread_join(hcontroller_thread, NULL);
+	pthread_join(hprint_data_table_thread, NULL);
 	// Need to wait remaining threads to finish.
 	//WaitForMultipleObjects();
 	free_runner_data(r_data);
@@ -73,34 +75,40 @@ static void get_thread_statistics(runner_data * r_data, actions_stats_data *stat
 		statistics->statistics[i].name = r_data->actions[i].name;
 
 		for(unsigned int t = 0; t < (statistics->statistics)[i].thr_count; t++){
-			DWORD result = 0;
-			if(r_data->actions[i].threads[t].handle == NULL){
+			int thd_status = 0;
+			if(r_data->actions[i].threads[t].handle == 0){
 				(statistics->statistics)[i].pending_run++;
 				continue;
 			}
-			if(!GetExitCodeThread(r_data->actions[i].threads[t].handle, &result)){
-				error_message(L"Failed to get thread exit code for action %s, thread # %u", (statistics->statistics)[i].name, t);
-				(statistics->statistics)[i].failed++;
-				continue;
-			}
-			if(result == STILL_ACTIVE){
-				if(!r_data->actions[i].threads[t].stop_thread){
-					(statistics->statistics)[i].running++;
-				}
-				else{
-					(statistics->statistics)[i].pending_stop++;
-				}
-				continue;
-			}
-			else{
-				(statistics->statistics)[i].stopped++;
+			thd_status = pthread_tryjoin_np(r_data->actions[i].threads[t].handle, NULL);
+
+			switch (thd_status){
+				case 0:
+					// The thread was stopped
+					(statistics->statistics)[i].stopped++;
+					break;
+				case ESRCH:
+				case EINVAL:
+					error_message(L"Failed to get thread state. Errno: %i. Action %s, thread # %u",thd_status, (statistics->statistics)[i].name, t);
+					(statistics->statistics)[i].failed++;
+					break;
+				case EBUSY:
+					if(!r_data->actions[i].threads[t].stop_thread){
+						(statistics->statistics)[i].running++;
+					}
+					else{
+						(statistics->statistics)[i].pending_stop++;
+					}
+					break;
+				default:
+					break;			
 			}
 		}
 	}
 }
 
-static DWORD WINAPI print_table(LPVOID data_pointer){
-	runner_data * r_data = data_pointer;
+static void * print_table(void * data_pointer){
+	/*runner_data * r_data = data_pointer;
 	SetConsoleTitle("LoadTestingTool");
 	HANDLE h_stdout, h_stdin;
 	WORD w_old_color_attrs;
@@ -175,7 +183,7 @@ static DWORD WINAPI print_table(LPVOID data_pointer){
 	if(!SetConsoleMode(h_stdin, old_mode)){
 		printf("Failed to set old console mode.");
 		return 1L;
-	}
+	}*/
 	return 0L;
 }
 

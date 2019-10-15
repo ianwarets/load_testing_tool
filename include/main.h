@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <windows.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <error.h>
 #include "test_plan.h"
 #include "logger.h"
+#include <errno.h>
 
 void print_help();
 
