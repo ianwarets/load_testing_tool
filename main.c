@@ -1,4 +1,5 @@
 #include "main.h"
+#include <cdk/cdk.h>
 
 static void get_thread_statistics(runner_data *, actions_stats_data *);
 char * create_table_data(actions_stats_data *statistics);
@@ -16,17 +17,17 @@ int main(int argc, char ** argv){
 
 	runner_data * r_data = generate_runner_data(test_plan_file_name);
 	if(!r_data){
-		printf("generate_runner_data returned NULL\n");
+		error_message("generate_runner_data returned NULL\n");
 		return EXIT_SUCCESS;
 	}
 	pthread_t hcontroller_thread;
 	
 	if(pthread_create(&hcontroller_thread, NULL, test_controller, r_data)){
 		free_runner_data(r_data);
-		printf("Failed to create controller thread. [%s]\n", strerror(errno));
+		error_message("Failed to create controller thread. [%s]\n", strerror(errno));
 		return EXIT_FAILURE;
 	}
-	printf("Controller started successfully\n");
+	info_message("Controller started successfully\n");
 	//_Atomic int stop_execution = 0;
 	/*HANDLE hinput_listener_thread = CreateThread(NULL, 0, listen_input_commands, &stop_execution, 0, NULL);
 	if(!hinput_listener_thread){
@@ -38,12 +39,13 @@ int main(int argc, char ** argv){
 	pthread_t hprint_data_table_thread;
 	
 	if(pthread_create(&hprint_data_table_thread, NULL, print_table, r_data) != 0){
-		printf("Failed to create print thread. [%s]\n", strerror(errno));
+		error_message("Failed to create print thread. [%s]\n", strerror(errno));
 		return EXIT_FAILURE;
 	}
 	// This indicated that all test steps are done by test controller.
-	pthread_join(hcontroller_thread, NULL);
 	pthread_join(hprint_data_table_thread, NULL);
+	
+	pthread_join(hcontroller_thread, NULL);
 	// Need to wait remaining threads to finish.
 	//WaitForMultipleObjects();
 	free_runner_data(r_data);
@@ -60,7 +62,7 @@ static void get_thread_statistics(runner_data * r_data, actions_stats_data *stat
 		statistics->statistics = (action_stats_data*)malloc(sizeof(action_stats_data) * actions_count + 1);
 	}
 	if(statistics->statistics == NULL){
-		error_message(L"Failed to allocate memory forstatistics->statistics structures array");
+		error_message("Failed to allocate memory forstatistics->statistics structures array");
 		return;
 	}
 	statistics->count = actions_count;
@@ -89,7 +91,7 @@ static void get_thread_statistics(runner_data * r_data, actions_stats_data *stat
 					break;
 				case ESRCH:
 				case EINVAL:
-					error_message(L"Failed to get thread state. Errno: %i. Action %s, thread # %u",thd_status, (statistics->statistics)[i].name, t);
+					error_message("Failed to get thread state. Errno: %i. Action %s, thread # %u",thd_status, (statistics->statistics)[i].name, t);
 					(statistics->statistics)[i].failed++;
 					break;
 				case EBUSY:
@@ -107,84 +109,104 @@ static void get_thread_statistics(runner_data * r_data, actions_stats_data *stat
 	}
 }
 
+#define NAME_SIZE 50
+
 static void * print_table(void * data_pointer){
-	/*runner_data * r_data = data_pointer;
-	SetConsoleTitle("LoadTestingTool");
-	HANDLE h_stdout, h_stdin;
-	WORD w_old_color_attrs;
-	CONSOLE_SCREEN_BUFFER_INFO csbInfo;
+	runner_data * r_data = data_pointer;
+	actions_stats_data t_stats = {.statistics = NULL, .count = 0};	
 
-	h_stdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	h_stdin = GetStdHandle(STD_INPUT_HANDLE);
-	if(h_stdout == INVALID_HANDLE_VALUE){
-		printf("Failed to receive stdout handle.");
-		return 1L;
+	CDKSCREEN *cdkscreen	= 0;
+	CDKMATRIX *cdkmatrix	= 0;
+	const char * title 		= "<C>Load testing tool\n<C><#LT><#HL(30)><#RT>";
+	int rows				= 5;
+	int cols				= 8;
+	int vrows				= 5;
+	int vcols				= 8;
+
+	bool use_coltitles = TRUE;
+	
+	const char * coltitle[NAME_SIZE];
+	const char * rowtitle[NAME_SIZE];
+
+	int colwidth[NAME_SIZE];
+	int colvalue[NAME_SIZE];
+
+	int col_spacing = 1;
+	int row_spacing = 1;
+	CDK_PARAMS params;
+	char * argv = "programm.exe";
+	CDKparseParams(1, &argv, &params, "trcT:C:R:" CDK_MIN_PARAMS);
+	params.Shadow = !params.Shadow;
+	use_coltitles = !CDKparamValue (&params, 'c', FALSE);
+	col_spacing = CDKparamNumber2 (&params, 'C', -1);
+	row_spacing = CDKparamNumber2 (&params, 'R', -1);
+	cdkscreen = initCDKScreen(NULL);
+	initCDKColor();
+
+#define set_col(n, width, string) \
+	coltitle[n] = use_coltitles ? string : 0 ;\
+	colwidth[n] = width ;\
+	colvalue[n] = vUMIXED
+
+	set_col(1, 20, "</B/5>Name");
+	set_col(2, 5, "</B/33>Pending");
+	set_col(3, 5, "</B/33>Running");
+	set_col(4, 5, "</B/33>Stopping");
+	set_col(5, 5, "</B/33>Stoped");
+	set_col(6, 5, "</B/33>Failed");
+	set_col(7, 5, "</B/33>Total");
+	set_col(8, 5, "</B/33>Running");
+
+	cdkmatrix = newCDKMatrix(cdkscreen,
+		CDKparamValue (&params, 'X', CENTER),
+		CDKparamValue (&params, 'Y', CENTER),
+		rows, cols, vrows, vcols,
+		title,
+		(CDK_CSTRING2)rowtitle,
+		(CDK_CSTRING2)coltitle,
+		colwidth, colvalue,
+		col_spacing, row_spacing, ' ',
+		COL,
+		params.Box,
+		params.Box,
+		params.Shadow);
+
+	if(cdkmatrix == 0){
+		destroyCDKScreen(cdkscreen);
+		endCDK();
+
+		printf("Cannot create the matrix wigdeg.\n");
+		printf("Is the window too small?\n");
+		printf("Programm will continue\n");
+		return NULL;
 	}
-	if(h_stdin == INVALID_HANDLE_VALUE){
-		printf("Failed to receive stdin handle");
-		return 1L;
-	}
 
-	if(!GetConsoleScreenBufferInfo(h_stdout, &csbInfo)){
-		printf("Failed to get console screen buffer.");
-		return 1L;
-	}
-
-	w_old_color_attrs = csbInfo.wAttributes;
-
-	if(!SetConsoleTextAttribute(h_stdout, FOREGROUND_GREEN | FOREGROUND_INTENSITY)){
-		printf("Failed to set console text attribute.");
-		return 1L;
-	}
-
-	DWORD old_mode;
-
-	if(!GetConsoleMode(h_stdin, &old_mode)){
-		printf("Failed to get console mode.");
-		return 1L;
-	}
-	DWORD new_mode = old_mode & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
-	if(!SetConsoleMode(h_stdin, new_mode)){
-		printf("Failed to set new console mode");
-		return 1L;
-	}
-
-	COORD origin_coordinates = {.X= 0, .Y = 0};
-	system("cls");
 	while(1){
-		
-		SetConsoleCursorPosition(h_stdout, origin_coordinates);
-		get_thread_statistics(r_data, &statistics);
-		const void * data_buffer = create_table_data(&statistics);
-		DWORD num_of_chars = strlen(data_buffer);
-		DWORD num_of_chars_written = 0;
-		if(!WriteConsole(h_stdout, data_buffer, num_of_chars, &num_of_chars_written, NULL)){
-			printf("Failed to write console.");
-			break;
-		}	
-		int exit_programm = 0;
-		for(int i = 0; i < statistics.count; i++){
-			if(statistics.statistics[i].running > 0){
-				continue;
-			}
-			else{
-				exit_programm |= 1;
-			}
+		get_thread_statistics(r_data, &t_stats);
+		//CDK_CONST char * stats = create_table_data(&t_stats);
+		char buf[NAME_SIZE];
+		for(int k =  0; k < t_stats.count; k++){
+			wcstombs(buf, t_stats.statistics[k].name, wcslen(t_stats.statistics[k].name));			
+			setCDKMatrixCell(cdkmatrix, k + 1, 1, buf);
+			sprintf(buf, "%u", t_stats.statistics[k].pending_run);
+			setCDKMatrixCell(cdkmatrix, k + 1, 2, buf);
+			sprintf(buf, "%u", t_stats.statistics[k].running);
+			setCDKMatrixCell(cdkmatrix, k + 1, 3, buf);
+			sprintf(buf, "%u", t_stats.statistics[k].pending_stop);
+			setCDKMatrixCell(cdkmatrix, k + 1, 4, buf);
+			sprintf(buf, "%u", t_stats.statistics[k].stopped);
+			setCDKMatrixCell(cdkmatrix, k + 1, 5, buf);
+			sprintf(buf, "%u", t_stats.statistics[k].failed);
+			setCDKMatrixCell(cdkmatrix, k + 1, 6, buf);
+			sprintf(buf, "%u", t_stats.statistics[k].thr_count);
+			setCDKMatrixCell(cdkmatrix, k + 1, 7, buf);
+			sprintf(buf, "%u", t_stats.statistics[k].thr_run);
+			setCDKMatrixCell(cdkmatrix, k + 1, 8, buf);
 		}
-		if(exit_programm == 1){
-			break;
-		}
-		Sleep(500);
+		drawCDKMatrix(cdkmatrix, FALSE);
+		sleep(2);
 	}
-	if(!SetConsoleTextAttribute(h_stdout, w_old_color_attrs)){
-		printf("Failed to set console text attribute.");
-		return 1L;
-	}
-	if(!SetConsoleMode(h_stdin, old_mode)){
-		printf("Failed to set old console mode.");
-		return 1L;
-	}*/
-	return 0L;
+	return NULL;
 }
 
 char * create_table_data(actions_stats_data *statistics){

@@ -7,7 +7,7 @@
 
 static long http_request(char *, char*, struct curl_slist *, response_data_struct *);
 static size_t save_response_data(void*, size_t, size_t, void *);
-static void save_request_statistics(char * name, time_t * time);
+static void save_request_statistics(char * name, struct timespec * time);
 static long make_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data);
 
 __thread CURL * hCurl;
@@ -15,7 +15,7 @@ __thread CURL * hCurl;
 int init_http_requests(){
 	hCurl = curl_easy_init();
 	if(hCurl == NULL){
-		fatal_message(L"Failed to create CURL handler.");
+		fatal_message("Failed to create CURL handler.");
 		return -1;
 	}
 
@@ -43,11 +43,11 @@ long get_request(char * name, char * url, struct curl_slist * headers, response_
 
 long post_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data, char * post_data, long post_data_size){
 	if(curl_easy_setopt(hCurl, CURLOPT_POSTFIELDS, post_data) != CURLE_OK){
-		error_message(L"Failed to set POST body value");
+		error_message("Failed to set POST body value");
 		return -1;
 	}
 	if(curl_easy_setopt(hCurl, CURLOPT_POSTFIELDSIZE, post_data_size) != CURLE_OK){
-		error_message(L"Failed to set POST field size property");
+		error_message("Failed to set POST field size property");
 		return -1;
 	}
 	return make_request(name, url, headers, response_data);
@@ -55,7 +55,7 @@ long post_request(char * name, char * url, struct curl_slist * headers, response
 
 static long make_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){	
 #ifdef DEBUG
-	debug_message(L"URL: \"%s\", curl_slist has value: %c, response_data_struct has value: %c", url, _message(L(response_data == NULL) ? 'n' : 'y');
+	debug_message("URL: \"%s\", curl_slist has value: %c, response_data_struct has value: %c", url, (curl_slist == NULL) ? 'n' : 'y', (response_data == NULL) ? 'n' : 'y');
 #endif
 	long result =  http_request(name, url, headers, response_data);	
 	return result;
@@ -64,9 +64,9 @@ static long make_request(char * name, char * url, struct curl_slist * headers, r
 /**
  *	Сбор и сохранение статистики по запросу.
  */
-static void save_request_statistics(char * name, time_t * time){
+static void save_request_statistics(char * name, struct timespec * time){
 #ifdef DEBUG
-	debug_message(L"hCurl has value:%c", (hCurl == NULL) ? L'n' : 'y');
+	debug_message("hCurl has value:%c", (hCurl == NULL) ? L'n' : 'y');
 #endif
 
 	curl_off_t response_time = -1;
@@ -95,14 +95,15 @@ static void save_request_statistics(char * name, time_t * time){
 	
 	curl_easy_getinfo(hCurl, CURLINFO_SPEED_DOWNLOAD_T, &download_speed);
 
+	long time_v = (time->tv_sec * 1000) + time->tv_nsec / 1000000;
 #ifdef DEBUG
-	debug_message(L"\tCURLINFO_TOTAL_TIME_T : %lli\n\
-	CURLINFO_CONNECT_TIME_T : %lli\n\
+	debug_message("\tCURLINFO_TOTAL_TIME_T : %li\n\
+	CURLINFO_CONNECT_TIME_T : %li\n\
 	CURLINFO_REQUEST_SIZE : %li\n\
-	CURLINFO_SIZE_DOWNLOAD_T : %lli\n\
+	CURLINFO_SIZE_DOWNLOAD_T : %li\n\
 	CURLINFO_HEADER_SIZE : %li\n\
-	CURLINFO_SPEED_UPLOAD_T : %lli\n\
-	CURLINFO_SPEED_DOWNLOAD_T : %lli\n\
+	CURLINFO_SPEED_UPLOAD_T : %li\n\
+	CURLINFO_SPEED_DOWNLOAD_T : %li\n\
 	CURLINFO_PRIVATE : [time]:%li", 
 	response_time,
 	network_delay,
@@ -111,10 +112,10 @@ static void save_request_statistics(char * name, time_t * time){
 	header_size,
 	upload_speed,
 	download_speed,
-	*time);
+	time_v);
 #endif
-	info_message(L"%li,%s,%lli,%lli,%li,%lli,%lli,%lli", 
-			*time,
+	info_message("%li,%s,%li,%li,%li,%li,%li,%li", 
+			time_v,
 			name,
 			response_time, 
 			network_delay, 
@@ -122,7 +123,6 @@ static void save_request_statistics(char * name, time_t * time){
 			received_bytes + header_size,
 			upload_speed,
 			download_speed);
-	free(time);
 }
 
 
@@ -135,7 +135,7 @@ static void save_request_statistics(char * name, time_t * time){
  */
 static long http_request(char * name, char * url, struct curl_slist * headers, response_data_struct * response_data){
 	if(name == NULL){
-			error_message(L"Request name is not set!");
+			error_message("Request name is not set!");
 			return -1;
 	}
 
@@ -145,7 +145,7 @@ static long http_request(char * name, char * url, struct curl_slist * headers, r
 	curl_easy_setopt(hCurl, CURLOPT_VERBOSE, 1L);
 #endif
 #ifdef DEBUG
-	debug_message(L"CURLOPT_URL: %s", url);
+	debug_message("CURLOPT_URL: %s", url);
 #endif
 	// Set URL
 	curl_easy_setopt(hCurl, CURLOPT_URL, url);	
@@ -164,21 +164,16 @@ static long http_request(char * name, char * url, struct curl_slist * headers, r
 	else{
 		curl_easy_setopt(hCurl, CURLOPT_USERAGENT, user_agent);
 	}
-	time_t * time_val = (time_t*)malloc(sizeof(time_t));
-	if(time_val == NULL){
-		error_message(L"Failed to allocate memory for time.");
-	}
-	else{
-		time(time_val);
-	}
-
+	struct timespec time_val;
+	clock_gettime(CLOCK_REALTIME, &time_val);
+	
 	// Perform request.
 	CURLcode result = curl_easy_perform(hCurl);
 	
 	if(result != CURLE_OK){
 		return -1;
 	} 
-	save_request_statistics(name, time_val);
+	save_request_statistics(name, &time_val);
 	long response_code;
 	result = curl_easy_getinfo(hCurl, CURLINFO_RESPONSE_CODE, &response_code);
 	if(result != CURLE_OK){
@@ -195,17 +190,17 @@ static long http_request(char * name, char * url, struct curl_slist * headers, r
 static size_t save_response_data(void* buffer, size_t size, size_t nmemb, void * userp){
 	size_t result = size * nmemb;
 #ifdef DEBUG
-	debug_message(L"size * nmemb = %u.", result);
+	debug_message("size * nmemb = %u.", result);
 #endif
 	if(userp == NULL){
 #ifdef DEBUG
-		debug_message(L"User data pointer is NULL. Nothing to do.");
+		debug_message("User data pointer is NULL. Nothing to do.");
 #endif
 		return result;
 	}
 	if(result == 0){
 #ifdef DEBUG
-		debug_message(L"Result = 0. Nothing to do");
+		debug_message("Result = 0. Nothing to do");
 #endif
 		return 0;
 	}
@@ -216,7 +211,7 @@ static size_t save_response_data(void* buffer, size_t size, size_t nmemb, void *
 	*response = realloc(*response, result + current_size);	
 	
 	if(response == NULL){
-		error_message(L"Memory allocation/reallocation failed.");
+		error_message("Memory allocation/reallocation failed.");
 		return 0;
 	}
 	
@@ -225,11 +220,11 @@ static size_t save_response_data(void* buffer, size_t size, size_t nmemb, void *
 		response_last_byte += current_size - 1;
 	}
 #ifdef DEBUG
-	debug_message(L"Response pointer value: %p.\tresponse_last_byte %i", response_last_byte);
+	debug_message("Response pointer value: %p.\tresponse_last_byte %i", response_last_byte);
 #endif
 	memcpy(response_last_byte, buffer, result);
 	if(*response == NULL){
-		error_message(L"Failed to copy from [buffer] to [userp->data].");
+		error_message("Failed to copy from [buffer] to [userp->data].");
 		return 0;
 	}
 	((response_data_struct*)userp)->size += result;

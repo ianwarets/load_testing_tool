@@ -13,7 +13,7 @@ static void * control_step_threads(void * parameter){
     action_data * actions = current_step->r_data->actions;
     unsigned int a_count = current_step->r_data->actions_count;
 #ifdef DEBUG
-    debug_message(L"%s %i threads with delay of %li s.", 
+    debug_message("%s %i threads with delay of %li s.", 
             current_step->to_start ? "Starting" : "Stopping",
             current_step->threads_count,
             current_step->slope_delay);
@@ -65,18 +65,18 @@ static void * control_step_threads(void * parameter){
                 actions[i].threads[t].index = t + 1;
                 int result = pthread_create(&(actions[i].threads[t].handle), NULL, actions[i].runner, (void*)&actions[i].threads[t]);
                 if(result != 0){
-                    static wchar_t * err_message_template = L"Failed to create thread for step #%u, action #%lu, thread #%lu. %s";
+                    static char * err_message_template = "Failed to create thread for step #%u, action #%lu, thread #%lu. %s";
                     static const size_t err_size = 100;
-                    wchar_t err_text[err_size];
+                    char err_text[err_size];
                     switch (result){
                         case EAGAIN:
-                            swprintf(err_text, err_size, L"Insufficient resources to create another thread");
+                            sprintf(err_text, "%s", "Insufficient resources to create another thread");
                             break;
                         case EINVAL:
-                            swprintf(err_text, err_size, L"Invalid settings in attr.");
+                            sprintf(err_text, "%s", "Invalid settings in attr.");
                             break;
                         case EPERM:
-                            swprintf(err_text, err_size, L"No permission to set the scheduling policy and parameters specified in attr");
+                            sprintf(err_text, "%s", "No permission to set the scheduling policy and parameters specified in attr");
                             break;
                         default:
                             break;
@@ -85,17 +85,17 @@ static void * control_step_threads(void * parameter){
                     continue;
                 }                    
 #ifdef DEBUG
-                debug_message(L"Thread # %i for step created.", t);
+                debug_message("Thread # %i for step # %u created.", t, current_step->step_index);
 #endif
             }            
             else{
 #ifdef DEBUG
-                debug_message(L"Signaling action #%lu, thread # %lu to stop", i, t);
+                debug_message("Signaling action #%lu, thread # %lu to stop", i, t);
 #endif
                 actions[i].threads[t].stop_thread = 1;
             }           
 #ifdef DEBUG
-            debug_message(L"Sleep for %li", slope_interval);
+            debug_message("Sleep for %li", slope_interval);
 #endif
         //TODO: Realize this delay by Timer, because it is more accurate then Sleeo()
             usleep(slope_interval * 1000000); 
@@ -111,18 +111,18 @@ static void step_routine(void * p_runner_data){
     pthread_t thread;
     int result = pthread_create(&thread, NULL, control_step_threads, p_runner_data);
     if(result != 0){
-        static wchar_t * err_message_template = L"Failed to create thread for step launch. [%s].";
+        static char * err_message_template = "Failed to create thread for step launch. [%s].";
         static const size_t err_size = 100;
-        wchar_t err_text[err_size];
+        char err_text[err_size];
         switch (result){
             case EAGAIN:
-                swprintf(err_text, err_size, L"Insufficient resources to create another thread");
+                sprintf(err_text, "%s", "Insufficient resources to create another thread");
                 break;
             case EINVAL:
-                swprintf(err_text, err_size, L"Invalid settings in attr.");
+                sprintf(err_text, "%s", "Invalid settings in attr.");
                 break;
             case EPERM:
-                swprintf(err_text, err_size, L"No permission to set the scheduling policy and parameters specified in attr");
+                sprintf(err_text, "%s", "No permission to set the scheduling policy and parameters specified in attr");
                 break;
             default:
                 break;
@@ -133,48 +133,44 @@ static void step_routine(void * p_runner_data){
 
 void * test_controller(void * p_runner_data){
     runner_data * r_data = ((runner_data*)p_runner_data);
-    /*struct _SECURITY_ATTRIBUTES security_attr;
-    security_attr.nLength = sizeof(SECURITY_ATTRIBUTES);
-    security_attr.bInheritHandle = FALSE;
-    security_attr.lpSecurityDescriptor = NULL;
-    */
+    
     //TODO: In case when no start delay, run first step imediate without timer creation
     long long next_time_interval = r_data->start_delay;
     // multiplexer for convert seconds to 100ns intervals
     //long long multiplexer = -10000000LL;
     //LARGE_INTEGER start_time = {.QuadPart = next_time_interval * multiplexer};
 #ifdef DEBUG
-    debug_message(L"Start delay : %li", r_data->start_delay);    
+    debug_message("Start delay : %li", r_data->start_delay);    
 #endif
 
     /* HANDLE step_timer = CreateWaitableTimer(&security_attr, TRUE, "Local: Step timer.");
     if(step_timer == NULL){
-        error_message(L"Failed to create timer.");
+        error_message("Failed to create timer.");
         ExitThread(ERR_CREATE_TIMER);
         return 1;
     } */
 
     for(unsigned int step_index = 0; step_index < r_data->steps_count; step_index++){
 /*#ifdef DEBUG
-        debug_message(L"Timer value is: %lli.", start_time.QuadPart);
+        debug_message("Timer value is: %lli.", start_time.QuadPart);
 #endif*/
         /* BOOL result = SetWaitableTimer(step_timer, &start_time, 0, step_routine, p_runner_data, FALSE);
         if(!result){
-            error_message(L"Failed to set timer for step # %u.",  step_index);
+            error_message("Failed to set timer for step # %u.",  step_index);
             ExitThread(ERR_SET_TIMER);
         } */
 #ifdef DEBUG
-        debug_message(L"Sleep for INFINITE.");
+        debug_message("Sleep for INFINITE.");
 #endif
         if(usleep(next_time_interval * 1000000) != 0){
-            error_message(L"Failed to make sleep");
+            error_message("Failed to make sleep");
         }
         step_routine(&r_data->steps[step_index]);
 
-        /* info_message(L"Canceling waitable timer.");
+        /* info_message("Canceling waitable timer.");
         result = CancelWaitableTimer(step_timer);
         if(!result){
-            error_message(L"Failed to cancel timer for step # %u.", step_index);
+            error_message("Failed to cancel timer for step # %u.", step_index);
             ExitThread(ERR_CANCEL_TIMER);
         } */
         next_time_interval = r_data->steps[step_index].duration +  r_data->steps[step_index].slope_delay;
@@ -182,7 +178,7 @@ void * test_controller(void * p_runner_data){
     }
 
    /*  if(!CloseHandle(step_timer)){
-        error_message(L"Failed to close timer handler.");
+        error_message("Failed to close timer handler.");
     } */
     return 0;
 }

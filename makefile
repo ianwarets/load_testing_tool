@@ -12,56 +12,51 @@ else
 	CFLAGSDLL+=-O3
 endif
 
-LIBRARIES=C:\Programming\C\libraries
-# CURL=$(LIBRARIES)\curl-7.61.1
-# ZLIB=$(LIBRARIES)\zlib-1.2.11
-# BROTLI=$(LIBRARIES)\libbrotli-master
-UJSON4C=$(LIBRARIES)\ujson4c
-P7=C:\Programming\C\libs\libP7Client_v5.1\Headers
-
-INCLUDE=-I$(CURL)\include -I$(UJSON4C)\include -Iinclude
+INCLUDE=-I$(CURL)\include -Iinclude
 LDPATH= -L\lib 
 LDLIBSTRANS=-llogger
-LDLIBS=-lcurl -lujdecode $(LDLIBSTRANS) -lpthread -ldl -lm
+LDLIBS=-lcurl -lujdecode $(LDLIBSTRANS) -lpthread -ldl -lm -lcdk -lP7
 LDLIBSREQUESTS=-lcurl $(LDLIBSTRANS)
 # -lwldap32 -lz -lssl -lcrypto -lgdi32 -lbrotlidec -lws2_32
-REFS=lib/liblogger.so lib/libtrans.so lib/libhreq.so main.o action_wrappers.o test_controller.o test_plan.o ltt_common.o
+REFS=lib/liblogger.so lib/libtrans.so lib/libhreq.so main.o ltt_common.o action_wrappers.o test_controller.o test_plan.o
 MACROS=-DCURL_STATICLIB
 # This is for enabling gnu functions such as pthread_tryjoin_n[]
 USEGNU=-D_GNU_SOURCE
 EXENAME=loadtestingtool
+# Pass shared library path to the linker to search at programm start.
+RPATH=-Wl,-rpath,'$$ORIGIN/../lib'
 
 all: build
 
 build: $(REFS)	
-	$(CC) $^ $(CFLAGS) -o bin/$(EXENAME).exe $(INCLUDE) $(LDPATH) $(LDLIBS) 
+	$(CC) $^ $(CFLAGS) -o bin/$(EXENAME).exe $(INCLUDE) $(LDPATH) $(LDLIBS) $(RPATH)
 
 lib/liblogger.so: logger.o
-	$(CC) $< -Wall -shared -Wl,-soname,liblogger.so -o $@  -Iinclude -Llib -lP7
+	$(CC) $< -Wall -shared -Wl,-soname,liblogger.so -o $@  -Iinclude -Llib
 
-lib/libtrans.so: transactions.o
-	$(CC) $< -Wall -shared -fPIC -Wl,-soname,libtrans.so -o $@ -Iinclude -Llib $(LDLIBSTRANS)
+lib/libtrans.so: transactions.o ltt_common.o
+	$(CC) $^   -Wall -shared -fPIC -Wl,-soname,libtrans.so -o $@ -Iinclude -Llib $(LDLIBSTRANS)
 
 lib/libhreq.so: http_requests.o
 	$(CC) $< -Wall -shared -fPIC -Wl,-soname,libhreq.so -o $@ -Iinclude -Llib $(INCLUDE) $(LDPATH) $(LDLIBSREQUESTS)
 
-main.o: main.c include/main.h
+main.o: main.c
 	$(CC) -c $< $(CFLAGS) -Iinclude $(USEGNU)
 
-test_plan.o: test_plan.c include/test_plan.h
-	$(CC) -c $< $(CFLAGS) -Iinclude -I$(UJSON4C)\include
+test_plan.o: test_plan.c
+	$(CC) -c $< $(CFLAGS) -Iinclude
 
-test_controller.o: test_controller.c include/test_controller.h
+test_controller.o: test_controller.c
 	$(CC) -c $< $(CFLAGS) -Iinclude $(USEGNU)
 
-action_wrappers.o: action_wrappers.c include/action_wrappers.h
+action_wrappers.o: action_wrappers.c
 	$(CC) -c $< $(CFLAGS) -Iinclude
 
-ltt_common.o: ltt_common.c include/ltt_common.h
+ltt_common.o: ltt_common.c
 	$(CC) -c $< $(CFLAGS) -Iinclude
 
-logger.o: logger.c include/logger.h
-	$(CC) -c -fPIC $< $(CFLAGS) -Iinclude -I$(P7)
+logger.o: logger.c
+	$(CC) -c -fPIC $< $(CFLAGS) -Iinclude
 
 http_requests.o: http_requests.c
 	$(CC) $(CFLAGSDLL) $(INCLUDE) $< -o $@

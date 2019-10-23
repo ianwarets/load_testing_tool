@@ -24,7 +24,9 @@
         "error.h": "c",
         "stdbool.h": "c",
         "cstdbool": "c",
-        "ltt_common.h": "c"
+        "ltt_common.h": "c",
+        "test_plan.h": "c",
+        "gtypes.h": "c"
     },
     "files.exclude": {
         "**/.classpath": true,

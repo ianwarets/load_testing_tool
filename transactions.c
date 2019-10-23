@@ -18,13 +18,13 @@ transaction transaction_begin(char * name){
         .start_time = lt,
     };   
 
-    info_message(L"Transaction:\"%s\" - Start time: %s", name, tr.start_time);
+    info_message("Transaction:\"%s\" - Start time: %li", name, tr.start_time.tv_sec);
     return tr;
 }
 
 void transaction_end(transaction * transaction, transaction_status status){
     if(transaction == NULL){
-        error_message(L"Transaction is NULL");
+        error_message("Transaction is NULL");
         return;
     }
     struct timespec lt;
@@ -37,17 +37,17 @@ void transaction_end(transaction * transaction, transaction_status status){
 
 static void save_statistics(transaction * transaction){
     if(transaction == NULL){
-        error_message(L"Transaction is NULL");
+        error_message("Transaction is NULL");
         return;
     }
     char * status = transaction->status == SUCCESS ? "SUCCESS" : "FAIL";
     unsigned long long duration = get_duration(transaction);
 #ifdef DEBUG
-    debug_message(L"Start time: %s. Duration: %lli. Name: %s. Status: %s"
-                , transaction->start_time, duration, transaction->name, status);
+    debug_message("Start time: %li. Duration: %lli. Name: %s. Status: %s"
+                , transaction->start_time.tv_sec, duration, transaction->name, status);
 #endif
-    info_message(L"%s,%s,%llu,%s",
-                transaction->start_time,
+    info_message("%li,%s,%llu,%s",
+                transaction->start_time.tv_sec,
                 transaction->name,
                 duration,
                 status);

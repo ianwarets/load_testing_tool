@@ -1,7 +1,6 @@
 *.exe
 *.csv
 *.o
-*.a
 *.log
 *.so
 /bin/*.json

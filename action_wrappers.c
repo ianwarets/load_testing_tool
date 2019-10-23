@@ -41,6 +41,7 @@ static void relative_pacing_runner(void(*action)(), void * parameter, unsigned l
 
 __thread _Atomic int e_signal_flag = 0;
 static void sig_handler(int sig){
+    error_message("Signal %i raised.", sig);
     e_signal_flag = 1;
 }
 
@@ -50,7 +51,7 @@ static void sig_handler(int sig){
 static void* actions_wrapper(void * thread_params, void(*pacing_function)()){   
     thread_data * thread = (thread_data*)thread_params;
     if(signal(SIGSEGV, sig_handler) == SIG_ERR){
-        printf("Failed to set signal handler for action %ls, thread # %i\n",thread->action->name , thread->index);
+        error_message("Failed to set signal handler for action %ls, thread # %i\n",thread->action->name , thread->index);
         pthread_exit((void*)EXIT_FAILURE);
     }
     
@@ -63,8 +64,8 @@ static void* actions_wrapper(void * thread_params, void(*pacing_function)()){
     init_routine();
     do{
         if(e_signal_flag){
-            error_message(L"Error occured in thread # %i\n", thread->index);
-            break;
+            error_message("Error occured in thread # %i\n", thread->index);
+            pthread_exit((void*)EXIT_FAILURE);
         }
         pacing_function(action_routine, thread_params, action->pacing);
     }
