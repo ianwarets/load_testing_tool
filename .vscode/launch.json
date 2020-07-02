@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/loadtestingtool.exe",
+            "program": "${workspaceFolder}/bin/loadtestingtool.exe",
             "args": ["Test_configuration.json"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

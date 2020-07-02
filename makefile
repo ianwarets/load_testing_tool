@@ -1,6 +1,8 @@
 # web request
 # MAKEFILE
 
+# libcurl must be downloaded from https://curl.haxx.se/download.html and installed on machine
+
 CC=gcc
 CFLAGS=-Wall
 CFLAGSDLL=-Wall -fPIC -c
@@ -12,10 +14,10 @@ else
 	CFLAGSDLL+=-O3
 endif
 
-INCLUDE=-I$(CURL)\include -Iinclude
+INCLUDE= -Iinclude
 LDPATH= -L\lib 
 LDLIBSTRANS=-llogger
-LDLIBS=-lcurl -lujdecode $(LDLIBSTRANS) -lpthread -ldl -lm -lcdk -lP7
+LDLIBS=-lcurl -lujdecode $(LDLIBSTRANS) -lpthread -ldl -lm -lcdk -lp7-shared
 LDLIBSREQUESTS=-lcurl $(LDLIBSTRANS)
 # -lwldap32 -lz -lssl -lcrypto -lgdi32 -lbrotlidec -lws2_32
 REFS=lib/liblogger.so lib/libtrans.so lib/libhreq.so main.o ltt_common.o action_wrappers.o test_controller.o test_plan.o
@@ -56,7 +58,7 @@ ltt_common.o: ltt_common.c
 	$(CC) -c $< $(CFLAGS) -Iinclude
 
 logger.o: logger.c
-	$(CC) -c -fPIC $< $(CFLAGS) -Iinclude
+	$(CC) -c -fPIC $< $(CFLAGS) -Iinclude -Iinclude/p7
 
 http_requests.o: http_requests.c
 	$(CC) $(CFLAGSDLL) $(INCLUDE) $< -o $@

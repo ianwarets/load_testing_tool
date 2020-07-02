@@ -12,7 +12,7 @@
                 "_UNICODE"
             ],            
             "compileCommands": "compile_commands.json",
-            "compilerPath": "gcc",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x64"

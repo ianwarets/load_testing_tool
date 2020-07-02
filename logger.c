@@ -1,8 +1,8 @@
 #include "logger.h"
 #include <stdlib.h>
 #include <stdarg.h>
-#include <GTypes.h>
-#include <P7_Cproxy.h>
+#include "GTypes.h"
+#include "P7_Cproxy.h"
 
 
 unsigned int init_failed = 0;
