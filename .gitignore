@@ -4,3 +4,4 @@
 *.log
 *.so
 /bin/*.json
+/bin/logs
