@@ -42,7 +42,7 @@ int main(int argc, char ** argv){
 		error_message("Failed to create print thread. [%s]\n", strerror(errno));
 		return EXIT_FAILURE;
 	}
-	// This indicated that all test steps are done by test controller.
+	// This indicates that all test steps are done by test controller.
 	pthread_join(hprint_data_table_thread, NULL);
 	
 	pthread_join(hcontroller_thread, NULL);
@@ -175,7 +175,7 @@ static void * print_table(void * data_pointer){
 		destroyCDKScreen(cdkscreen);
 		endCDK();
 
-		printf("Cannot create the matrix wigdeg.\n");
+		printf("Cannot create the matrix widget.\n");
 		printf("Is the window too small?\n");
 		printf("Programm will continue\n");
 		return NULL;

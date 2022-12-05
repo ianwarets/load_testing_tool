@@ -19,8 +19,8 @@
 #ifndef P7_VERSION_H
 #define P7_VERSION_H
 //-----------------------------------------
-#define P7_VERSION 00050005
+#define P7_VERSION 00050006
 #define P7_VERSION_MAJOR 5
-#define P7_VERSION_MINOR 5
+#define P7_VERSION_MINOR 6
 //-----------------------------------------
 #endif //P7_VERSION_H

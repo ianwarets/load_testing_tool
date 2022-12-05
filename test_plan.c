@@ -14,6 +14,9 @@ static int get_function_references(action_data *, wchar_t *);
 static int generate_actions_data(runner_data * r_data, test_plan t_plan);
 static wchar_t * get_action_name(wchar_t * action_file_name);
 
+/// @brief 
+/// @param test_plan_name 
+/// @return 
 static char * read_test_plan(char * test_plan_name){
     FILE * f_test_plan = fopen(test_plan_name, "r");
     if(f_test_plan == NULL){
@@ -47,6 +50,9 @@ static char * read_test_plan(char * test_plan_name){
     return file_data;
 }
 
+/// @brief 
+/// @param test_plan_name 
+/// @return 
 runner_data * generate_runner_data(char * test_plan_name){
     char * test_plan_file_data = read_test_plan(test_plan_name);
     if(test_plan_file_data == NULL){
@@ -115,6 +121,8 @@ runner_data * generate_runner_data(char * test_plan_name){
     return r_data;
 }
 
+/// @brief 
+/// @param run_data 
 void free_runner_data(runner_data * run_data){
     if(run_data == NULL){
         return;
@@ -140,6 +148,10 @@ void free_runner_data(runner_data * run_data){
     free(run_data->steps);
 }
 
+/// @brief 
+/// @param json_string 
+/// @param t_plan 
+/// @return 
 static int create_test_plan_from_json(char * json_string, test_plan * t_plan){
     void * state;
     int objects_count;

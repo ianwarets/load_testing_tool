@@ -10,12 +10,13 @@
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
-            ],            
+            ],
             "compileCommands": "compile_commands.json",
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-x64"
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4

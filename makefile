@@ -17,7 +17,7 @@ endif
 INCLUDE= -Iinclude
 LDPATH= -L\lib 
 LDLIBSTRANS=-llogger
-LDLIBS=-lcurl -lujdecode $(LDLIBSTRANS) -lpthread -ldl -lm -lcdk -lp7-shared
+LDLIBS=-lcurl -lujdecode $(LDLIBSTRANS) -lpthread -ldl -lm -lcdk -lrt
 LDLIBSREQUESTS=-lcurl $(LDLIBSTRANS)
 # -lwldap32 -lz -lssl -lcrypto -lgdi32 -lbrotlidec -lws2_32
 REFS=lib/liblogger.so lib/libtrans.so lib/libhreq.so main.o ltt_common.o action_wrappers.o test_controller.o test_plan.o
@@ -34,13 +34,13 @@ build: $(REFS)
 	$(CC) $^ $(CFLAGS) -o bin/$(EXENAME).exe $(INCLUDE) $(LDPATH) $(LDLIBS) $(RPATH)
 
 lib/liblogger.so: logger.o
-	$(CC) $< -Wall -shared -Wl,-soname,liblogger.so -o $@  -Iinclude -Llib
+	$(CC) $< -Wall -shared -fpic -Wl,-soname,liblogger.so -o $@  -Iinclude -Llib -lp7-shared
 
 lib/libtrans.so: transactions.o ltt_common.o
-	$(CC) $^   -Wall -shared -fPIC -Wl,-soname,libtrans.so -o $@ -Iinclude -Llib $(LDLIBSTRANS)
+	$(CC) $^ -Wall -shared -fpic -Wl,-soname,libtrans.so -o $@ -Iinclude -Llib $(LDLIBSTRANS)
 
 lib/libhreq.so: http_requests.o
-	$(CC) $< -Wall -shared -fPIC -Wl,-soname,libhreq.so -o $@ -Iinclude -Llib $(INCLUDE) $(LDPATH) $(LDLIBSREQUESTS)
+	$(CC) $< -Wall -shared -fpic -Wl,-soname,libhreq.so -o $@ -Iinclude -Llib $(INCLUDE) $(LDPATH) $(LDLIBSREQUESTS)
 
 main.o: main.c
 	$(CC) -c $< $(CFLAGS) -Iinclude $(USEGNU)
@@ -58,7 +58,7 @@ ltt_common.o: ltt_common.c
 	$(CC) -c $< $(CFLAGS) -Iinclude
 
 logger.o: logger.c
-	$(CC) -c -fPIC $< $(CFLAGS) -Iinclude -Iinclude/p7
+	$(CC) -c $< $(CFLAGS) -Iinclude -Iinclude/p7
 
 http_requests.o: http_requests.c
 	$(CC) $(CFLAGSDLL) $(INCLUDE) $< -o $@

@@ -107,11 +107,13 @@
     #define PRAGMA_PACK_ENTER(x)  __pragma(pack(push, x))
     #define PRAGMA_PACK_EXIT()   __pragma(pack(pop))
     #define ATTR_PACK(x)
-    #define UNUSED_FUNC 
+    #define ATTR_ALIGN(x)
+    #define UNUSED_FUNC
 #else
     #define PRAGMA_PACK_ENTER(x) 
     #define PRAGMA_PACK_EXIT(x) 
     #define ATTR_PACK(x) __attribute__ ((aligned(x), packed))
+    #define ATTR_ALIGN(x) __attribute__ ((aligned(x)))
     #define UNUSED_FUNC __attribute__ ((unused))
 #endif
 

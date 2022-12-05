@@ -19,6 +19,9 @@ static __attribute__((destructor)) void logger_close(){
 
 }
 
+/// @brief 
+/// @param text 
+/// @param  
 void debug_message(const char * text, ...){
 	va_list args;
 	va_start(args, text);
@@ -26,6 +29,9 @@ void debug_message(const char * text, ...){
 	va_end(args);
 }
 
+/// @brief 
+/// @param text 
+/// @param  
 void info_message(const char * text, ...){
 	va_list args;
 	va_start(args, text);
@@ -33,6 +39,9 @@ void info_message(const char * text, ...){
 	va_end(args);
 }
 
+/// @brief 
+/// @param text 
+/// @param  
 void warning_message(const char * text, ...){
 	va_list args;
 	va_start(args, text);
@@ -40,6 +49,9 @@ void warning_message(const char * text, ...){
 	va_end(args);
 }
 
+/// @brief 
+/// @param text 
+/// @param  
 void error_message(const char * text, ...){
 	va_list args;
 	va_start(args, text);
@@ -47,6 +59,9 @@ void error_message(const char * text, ...){
 	va_end(args);
 }
 
+/// @brief 
+/// @param text 
+/// @param  
 void fatal_message(const char * text, ...){
 	va_list args;
 	va_start(args, text);
