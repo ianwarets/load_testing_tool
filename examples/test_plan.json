@@ -1,0 +1,24 @@
+{
+    "tes_name":"example",
+    "start_delay":100,
+    "actions":[{
+            "name":"action_1.so",
+            "pacing":10,
+            "pacing_type":"",
+            "percentage":100
+        }
+    ],
+    "steps":[{
+            "action_type":"start",
+            "run_duration":100,
+            "threads_count":10,
+            "slope_duration":10
+        },
+        {
+            "action_type":"stop",
+            "run_duration":100,
+            "threads_count":10,
+            "slope_duration":10
+        }
+    ]
+}
