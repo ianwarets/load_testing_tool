@@ -281,6 +281,7 @@ static int get_function_references(action_data * p_action, wchar_t * file_name){
     if(p_action->action_lib_handler == NULL){        
         err_msg_buf = dlerror();    
         error_message("Failed to load file %s. [%s].", f_name, err_msg_buf);
+        free(f_name);
         return 1;
     }
     p_action->action = (void*)dlsym(p_action->action_lib_handler, "action");
@@ -288,6 +289,7 @@ static int get_function_references(action_data * p_action, wchar_t * file_name){
     if(p_action->action == NULL && err_msg_buf != NULL){        
         error_message("Failed to get \"action\" method from file: %s. %s", f_name, err_msg_buf);
         dlclose(p_action->action_lib_handler);
+        free(f_name);
         return 1;
     }
     p_action->init = (void*)dlsym(p_action->action_lib_handler, "init");
@@ -295,6 +297,7 @@ static int get_function_references(action_data * p_action, wchar_t * file_name){
     if(p_action->init == NULL && err_msg_buf != NULL){        
         error_message("Failed to get \"init\" method from file: %s. %s", f_name, err_msg_buf);
         dlclose(p_action->action_lib_handler);
+        free(f_name);
         return 1;
     }
     p_action->end = (void*)dlsym(p_action->action_lib_handler, "end");
@@ -302,8 +305,10 @@ static int get_function_references(action_data * p_action, wchar_t * file_name){
     if(p_action->end == NULL && err_msg_buf != NULL){        
         error_message("Failed to get \"end\" method from file: %s. %s", f_name, err_msg_buf);
         dlclose(p_action->action_lib_handler);
+        free(f_name);
         return 1;
     }
+    free(f_name);
     return 0;
 }
 
@@ -351,6 +356,18 @@ static int generate_actions_data(runner_data * r_data, test_plan t_plan){
     }
     r_data->actions = actions;
     for(int i = 0; i < actions_count; i++){
+        actions[i].threads = NULL;
+        actions[i].threads_count = 0;
+        actions[i].running_threads = 0;
+        actions[i].init = NULL;
+        actions[i].action = NULL;
+        actions[i].end = NULL;
+        actions[i].name = NULL;
+        actions[i].action_lib_handler = NULL;
+        actions[i].runner = NULL;
+        actions[i].pacing = 0;
+        actions[i].ratio = 0;
+        
         if(get_function_references(&actions[i], t_plan.actions[i].action_file_name)){
             return 1;
         }

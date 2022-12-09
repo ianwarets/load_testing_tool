@@ -12,8 +12,10 @@ enum thread_errors {
     ERR_CANCEL_TIMER
 };
 
+/// @brief Struct for storing action information. Threads, functions to execute, ref to test case library, pacing and ratio
 typedef struct action action_data;
 
+/// @brief Struct for storing execution thread information.
 typedef struct thread{
 	_Atomic int stop_thread;	
 	unsigned int index;
@@ -38,6 +40,7 @@ struct action{
     unsigned int ratio;
 };
 
+/// @brief Struct for storing tesp plan data. Steps, threads count, actions/
 typedef struct runner runner_data;
 
 typedef struct step{

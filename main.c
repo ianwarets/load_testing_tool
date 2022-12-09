@@ -8,7 +8,8 @@ static void * print_table(void *);
 
 actions_stats_data statistics = {.statistics = NULL, .count = 0};
 
-int main(int argc, char ** argv){	
+int main(int argc, char ** argv){
+	info_message("Load generator started. v. 0.0.1");
 	if(argc == 1){
 		print_help();
 		return EXIT_SUCCESS;
