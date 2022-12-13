@@ -11,12 +11,13 @@ static hP7_Trace g_hTrace = NULL;
 // Выполнить однократнуню инициализацию.
 static __attribute__((constructor)) void logger_init(){	
 	P7_Set_Crash_Handler();
-	g_hClient = P7_Client_Create(TM("/P7.Sink=FileTxt"));
+	//TODO: Impot logger configuration from configuration file. If not specified, use defaults/
+	g_hClient = P7_Client_Create(TM("/P7.Sink=FileTxt /P7.Format=\"%tm [%lv] %ms\" /P7.Roll=100mb /P7.Tcr.Verb=2"));
 	if(g_hClient == NULL){
 		printf("Failed to create P7 Client");
 		return;
 	}
-	g_hTrace = P7_Trace_Create(g_hClient, TM("RevoloaderTraceChannel"), NULL);
+	g_hTrace = P7_Trace_Create(g_hClient, TM("LoadToolChannel"), NULL);
 	if(g_hTrace == NULL){
 		printf("Failed to create Trace ");
 		return;
@@ -38,7 +39,9 @@ static __attribute__((destructor)) void logger_close(){
         g_hClient = NULL;
     }
 	P7_Clr_Crash_Handler();
+#ifdef DEBUG
 	printf("Destructor called successfully.\n");
+#endif
 }
 
 /// @brief 

@@ -20,7 +20,7 @@ static wchar_t * get_action_name(wchar_t * action_file_name);
 static char * read_test_plan(char * test_plan_name){
     FILE * f_test_plan = fopen(test_plan_name, "r");
     if(f_test_plan == NULL){
-        error_message("Failed to open test plan file.");
+        error_message("Failed to open test plan file. '%s'", test_plan_name);
         return NULL;
     }
     if(fseek(f_test_plan, 0, SEEK_END)){        

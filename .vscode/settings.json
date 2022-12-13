@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.cps": "javascript",
         "array": "c",
         "deque": "c",
         "vector": "c",
@@ -26,7 +27,9 @@
         "cstdbool": "c",
         "ltt_common.h": "c",
         "test_plan.h": "c",
-        "gtypes.h": "c"
+        "gtypes.h": "c",
+        "p7_cproxy.h": "c",
+        "wchar.h": "c"
     },
     "files.exclude": {
         "**/.classpath": true,
