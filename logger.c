@@ -5,8 +5,6 @@
 #include "P7_Cproxy.h"
 #include <stdio.h>
 
-
-unsigned int init_failed = 0;
 static hP7_Client g_hClient = NULL;
 static hP7_Trace g_hTrace = NULL;
 

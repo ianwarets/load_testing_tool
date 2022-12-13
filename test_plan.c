@@ -273,9 +273,11 @@ static int create_test_plan_from_json(char * json_string, test_plan * t_plan){
 
 static int get_function_references(action_data * p_action, wchar_t * file_name){
     int fname_len = wcslen(file_name);
-    char * f_name = (char*)malloc(sizeof(char) * fname_len);
-    wcstombs(f_name, file_name, fname_len);    
-
+    debug_message("File to open length '%i' is wchar_t:'%ls'", fname_len, file_name);
+    char * f_name = (char*)malloc(sizeof(char) * (fname_len + 1));
+    wcstombs(f_name, file_name, fname_len);   
+    f_name[fname_len] = '\0';
+    debug_message("File to open is char:\"%s\"", f_name); 
     char * err_msg_buf;
     p_action->action_lib_handler = dlopen(f_name, RTLD_LAZY);     
     if(p_action->action_lib_handler == NULL){        
